@@ -23,6 +23,8 @@ type Question = {
   text: string;
   answers: string[];
   correctAnswers: number[];
+  isDecoy?: boolean[];
+  selectionType: "single" | "multiple" | "dropdown";
 };
 
 export default function HostDashboard() {
@@ -41,6 +43,8 @@ export default function HostDashboard() {
       text: "",
       answers: gameMode === "single" ? [""] : ["", "", "", ""],
       correctAnswers: [],
+      isDecoy: gameMode === "single" ? [] : [false, false, false, false],
+      selectionType: gameMode === "single" ? "single" : "multiple",
     },
   ]);
   const [showShareModal, setShowShareModal] = useState(false);
@@ -85,6 +89,8 @@ export default function HostDashboard() {
         text: "",
         answers: gameMode === "single" ? [""] : ["", "", "", ""],
         correctAnswers: [],
+        isDecoy: gameMode === "single" ? [] : [false, false, false, false],
+        selectionType: gameMode === "single" ? "single" : "multiple",
       },
     ]);
   };
@@ -128,6 +134,39 @@ export default function HostDashboard() {
       })
     );
   };
+  
+  // Toggle decoy status for an answer option
+  const toggleDecoy = (id: string, answerIndex: number) => {
+    setQuestions(
+      questions.map((q) => {
+        if (q.id === id) {
+          const decoys = q.isDecoy || Array(q.answers.length).fill(false);
+          const newDecoys = [...decoys];
+          newDecoys[answerIndex] = !newDecoys[answerIndex];
+          
+          // Don't allow marking the correct answer as a decoy
+          if (q.correctAnswers.includes(answerIndex) && newDecoys[answerIndex]) {
+            return q;
+          }
+          
+          return { ...q, isDecoy: newDecoys };
+        }
+        return q;
+      })
+    );
+  };
+  
+  // Update question selection type
+  const updateSelectionType = (id: string, type: "single" | "multiple" | "dropdown") => {
+    setQuestions(
+      questions.map((q) => {
+        if (q.id === id) {
+          return { ...q, selectionType: type };
+        }
+        return q;
+      })
+    );
+  };
 
   // Add option for multi-choice questions
   const addOption = (id: string) => {
@@ -149,15 +188,22 @@ export default function HostDashboard() {
           ...q,
           answers: q.answers.length ? q.answers : [""],
           correctAnswers: [],
+          isDecoy: [],
+          selectionType: "single"
         }))
       );
     } else {
       setQuestions(
-        questions.map((q) => ({
-          ...q,
-          answers: q.answers.length >= 4 ? q.answers : ["", "", "", ""],
-          correctAnswers: [],
-        }))
+        questions.map((q) => {
+          const newAnswers = q.answers.length >= 4 ? q.answers : ["", "", "", ""];
+          return {
+            ...q,
+            answers: newAnswers,
+            correctAnswers: [],
+            isDecoy: Array(newAnswers.length).fill(false),
+            selectionType: "multiple"
+          };
+        })
       );
     }
   }, [gameMode]);
@@ -188,6 +234,8 @@ export default function HostDashboard() {
         text: q.text,
         answers: q.answers,
         correctAnswers: q.correctAnswers,
+        isDecoy: q.isDecoy || [],
+        selectionType: q.selectionType || (gameMode === "single" ? "single" : "multiple"),
       })),
     };
 
@@ -208,6 +256,8 @@ export default function HostDashboard() {
         text: "",
         answers: gameMode === "single" ? [""] : ["", "", "", ""],
         correctAnswers: [],
+        isDecoy: gameMode === "single" ? [] : [false, false, false, false],
+        selectionType: gameMode === "single" ? "single" : "multiple",
       },
     ]);
   };
@@ -380,36 +430,80 @@ export default function HostDashboard() {
                         />
                       </div>
                     ) : (
-                      <div className="mt-2 space-y-2">
-                        {question.answers.map((answer, answerIndex) => (
-                          <div key={answerIndex} className="flex items-center">
-                            <input
-                              type="radio"
-                              name={`q${question.id}-correct`}
-                              value={answerIndex}
-                              className="h-4 w-4 text-primary border-gray-300 focus:ring-primary"
-                              checked={question.correctAnswers.includes(answerIndex)}
-                              onChange={() => updateCorrectAnswer(question.id, answerIndex)}
-                            />
-                            <Input
-                              placeholder={`Option ${answerIndex + 1}`}
-                              className="ml-2"
-                              value={answer}
-                              onChange={(e) => updateQuestionAnswer(question.id, answerIndex, e.target.value)}
-                            />
-                          </div>
-                        ))}
-                        {question.answers.length < 6 && (
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="text-xs text-primary hover:text-primary-700"
-                            onClick={() => addOption(question.id)}
+                      <div className="mt-2 space-y-4">
+                        <div>
+                          <Label className="text-xs font-medium text-gray-500">
+                            Answer Selection Type
+                          </Label>
+                          <Select 
+                            value={question.selectionType} 
+                            onValueChange={(value) => updateSelectionType(
+                              question.id, 
+                              value as "single" | "multiple" | "dropdown"
+                            )}
                           >
-                            + Add Option
-                          </Button>
-                        )}
+                            <SelectTrigger className="mt-1">
+                              <SelectValue placeholder="Select answer type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="single">Radio (Single Selection)</SelectItem>
+                              <SelectItem value="multiple">Checkboxes (Multiple Selection)</SelectItem>
+                              <SelectItem value="dropdown">Dropdown Menu</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          {question.answers.map((answer, answerIndex) => {
+                            const isDecoy = question.isDecoy?.[answerIndex] || false;
+                            
+                            return (
+                              <div key={answerIndex} className="flex items-center space-x-2">
+                                <input
+                                  type="radio"
+                                  name={`q${question.id}-correct`}
+                                  value={answerIndex}
+                                  className="h-4 w-4 text-primary border-gray-300 focus:ring-primary"
+                                  checked={question.correctAnswers.includes(answerIndex)}
+                                  onChange={() => updateCorrectAnswer(question.id, answerIndex)}
+                                />
+                                
+                                <Input
+                                  placeholder={`Option ${answerIndex + 1}`}
+                                  className={`flex-1 ${isDecoy ? 'border-orange-300 bg-orange-50' : ''}`}
+                                  value={answer}
+                                  onChange={(e) => updateQuestionAnswer(question.id, answerIndex, e.target.value)}
+                                />
+                                
+                                <Button
+                                  type="button"
+                                  variant={isDecoy ? "destructive" : "outline"}
+                                  size="sm"
+                                  className="text-xs"
+                                  onClick={() => toggleDecoy(question.id, answerIndex)}
+                                  disabled={question.correctAnswers.includes(answerIndex)}
+                                  title={question.correctAnswers.includes(answerIndex) ? 
+                                    "Cannot mark correct answer as decoy" : 
+                                    (isDecoy ? "Remove decoy" : "Mark as decoy")}
+                                >
+                                  {isDecoy ? "Decoy" : "Mark Decoy"}
+                                </Button>
+                              </div>
+                            );
+                          })}
+                          
+                          {question.answers.length < 6 && (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              className="text-xs text-primary hover:text-primary-700"
+                              onClick={() => addOption(question.id)}
+                            >
+                              + Add Option
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     )}
                   </div>
