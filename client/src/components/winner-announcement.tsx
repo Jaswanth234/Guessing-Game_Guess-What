@@ -122,9 +122,11 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
                 {winners
                   .filter(winner => winner.place <= 3)
                   .sort((a, b) => {
-                    // Sort to ensure 2nd, 1st, 3rd order for display
+                    // Sort to ensure 2nd, 3rd, 1st order for display
                     if (a.place === 1) return 0;
                     if (b.place === 1) return -1;
+                    if (a.place === 3) return -1;
+                    if (b.place === 3) return 1;
                     return a.place - b.place;
                   })
                   .map(winner => (
