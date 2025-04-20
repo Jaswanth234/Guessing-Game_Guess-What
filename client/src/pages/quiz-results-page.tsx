@@ -11,7 +11,6 @@ export default function QuizResultsPage() {
   
   const { data: quiz, isLoading, error } = useQuery<Quiz>({
     queryKey: [`/api/quizzes/${id}/results`],
-    refetchInterval: 5000, // Poll for updates
   });
 
   return (
@@ -33,7 +32,7 @@ export default function QuizResultsPage() {
             <WinnerAnnouncement quizId={id || ""} />
           ) : (
             <div className="py-10 text-center">
-              <p className="text-gray-500">Quiz not found or results not available</p>
+              <p className="text-gray-500">Quiz not found or results not available yet</p>
             </div>
           )}
         </div>
