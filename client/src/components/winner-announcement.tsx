@@ -28,32 +28,30 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
 
   useEffect(() => {
     if (quiz && Array.isArray(quiz.participants) && quiz.participants.length > 0) {
-      // Calculate winners based on correct answers and submission time
+      // Calculate winners based on non-decoy answers and submission time
       const sortedParticipants = [...quiz.participants]
         .map(participant => {
-          // Count correct answers
-          // Parse answers which might be in comma-separated string format
           let correctCount = 0;
+          
+          // Process each answer
+          participant.answers.forEach((answer, idx) => {
+            const question = quiz.questions[idx];
+            if (!question) return;
 
-          // Handle case where only one question exists
-          const answer = participant.answers[0];
-          if (answer !== undefined) {
-            // Handle both single and multi mode scoring
-            if (typeof answer === 'string') {
-              const selectedAnswers = answer.includes(',') 
-                ? answer.split(',').map(a => Number(a))
-                : [Number(answer)];
+            // Convert answer string to array of numbers
+            const selectedAnswers = answer.includes(',') 
+              ? answer.split(',').map(a => Number(a))
+              : [Number(answer)];
 
-              const correctAnswers = quiz.questions[0].correctAnswers;
+            // Count non-decoy answers as correct
+            const nonDecoyCount = selectedAnswers.filter(opt => 
+              !question.isDecoy[opt]
+            ).length;
 
-              // For multiple selection questions, count as correct if all required answers are selected
-              const isCorrect = correctAnswers.every(ans => selectedAnswers.includes(ans));
-
-              if (isCorrect) {
-                correctCount++;
-              }
+            if (nonDecoyCount > 0) {
+              correctCount++;
             }
-          }
+          });
 
           return {
             ...participant,
