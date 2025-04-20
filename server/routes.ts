@@ -198,10 +198,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Save participant's answers
+      // Ensure answers are in the correct format for storage
+      const formattedAnswers = Array.isArray(answers) 
+        ? answers 
+        : [answers];
+        
       const participant = await storage.addParticipant({
         quizId,
         playerName,
-        answers
+        answers: formattedAnswers
       });
       
       res.status(201).json(participant);
