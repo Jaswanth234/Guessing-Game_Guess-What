@@ -51,7 +51,7 @@ export default function Navbar() {
                     className="relative h-8 w-8 rounded-full"
                   >
                     <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-white font-semibold">
-                      {user.username.substring(0, 2).toUpperCase()}
+                      {user.username.substring(0, 1).toUpperCase()}
                     </div>
                   </Button>
                 </DropdownMenuTrigger>
