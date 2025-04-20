@@ -7,6 +7,8 @@ import NotFound from "@/pages/not-found";
 import HomePage from "@/pages/home-page";
 import QuizPage from "@/pages/quiz-page";
 import AuthPage from "@/pages/auth-page";
+import MyQuizzesPage from "@/pages/my-quizzes-page";
+import AnalyticsPage from "@/pages/analytics-page";
 import { AuthProvider } from "./hooks/use-auth";
 import { ProtectedRoute } from "./lib/protected-route";
 
@@ -14,6 +16,8 @@ function Router() {
   return (
     <Switch>
       <ProtectedRoute path="/" component={HomePage} />
+      <ProtectedRoute path="/my-quizzes" component={MyQuizzesPage} />
+      <ProtectedRoute path="/analytics" component={AnalyticsPage} />
       <Route path="/auth" component={AuthPage} />
       <Route path="/quiz/:id" component={QuizPage} />
       <Route component={NotFound} />
