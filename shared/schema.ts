@@ -81,7 +81,9 @@ export const insertParticipantSchema = createInsertSchema(participants).pick({
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 
-export type Quiz = typeof quizzes.$inferSelect;
+export type Quiz = typeof quizzes.$inferSelect & {
+  participants?: Participant[];
+};
 export type InsertQuiz = z.infer<typeof insertQuizSchema>;
 
 export type Participant = typeof participants.$inferSelect;

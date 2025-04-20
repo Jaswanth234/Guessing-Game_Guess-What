@@ -165,9 +165,15 @@ export class DatabaseStorage implements IStorage {
 
   // Participant methods
   async addParticipant(insertParticipant: InsertParticipant): Promise<Participant> {
+    // Ensure answers is properly formatted as an array for Drizzle
+    const formattedParticipant = {
+      ...insertParticipant,
+      answers: Array.isArray(insertParticipant.answers) ? insertParticipant.answers : []
+    };
+    
     const [participant] = await db
       .insert(participants)
-      .values(insertParticipant)
+      .values(formattedParticipant)
       .returning();
     
     return participant;
