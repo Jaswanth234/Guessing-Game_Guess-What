@@ -35,11 +35,11 @@ export interface IStorage {
   getParticipantsByQuiz(quizId: number): Promise<Participant[]>;
   
   // Session store
-  sessionStore: session.SessionStore;
+  sessionStore: any; // session store type
 }
 
 export class DatabaseStorage implements IStorage {
-  public sessionStore: session.SessionStore;
+  public sessionStore: any; // Using any for session store
 
   constructor() {
     this.sessionStore = new PostgresSessionStore({ 

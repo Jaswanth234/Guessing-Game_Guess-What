@@ -46,6 +46,8 @@ export const quizzes = pgTable("quizzes", {
     text: string;
     answers: string[];
     correctAnswers: (string | number)[];
+    isDecoy?: boolean[]; // track which answers are decoys
+    selectionType: "single" | "multiple" | "dropdown"; // type of selection UI
   }[]>().notNull(),
 });
 

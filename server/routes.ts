@@ -71,15 +71,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Process and validate questions based on game mode
       const processedQuestions = questions.map((q: any) => {
-        const question = {
+        // Default question structure
+        const question: any = {
           text: q.text,
           answers: q.answers,
-          correctAnswers: q.correctAnswers || []
+          correctAnswers: q.correctAnswers || [],
+          selectionType: q.selectionType || "single" // default to single selection
         };
         
-        if (gameMode === "single") {
-          // For single entry mode, ensure answers are comma-separated
-          question.correctAnswers = q.answers[0].split(',').map((a: string) => a.trim());
+        // Handle decoy options
+        if (q.isDecoy && Array.isArray(q.isDecoy)) {
+          question.isDecoy = q.isDecoy;
+        }
+        
+        // Special handling for different question types
+        if (gameMode === "single" && question.selectionType === "single") {
+          // For single entry mode, ensure answers are comma-separated for backward compatibility
+          if (q.answers.length === 1 && typeof q.answers[0] === 'string' && q.answers[0].includes(',')) {
+            question.correctAnswers = q.answers[0].split(',').map((a: string) => a.trim());
+          }
         }
         
         return question;
@@ -137,7 +147,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const sanitizedQuestions = updatedQuiz.questions.map((q) => ({
             text: q.text,
             answers: q.answers,
-            correctAnswers: [] // Hide correct answers
+            correctAnswers: [], // Hide correct answers
+            selectionType: q.selectionType || 'single',
+            isDecoy: q.isDecoy // Keep decoy information to display UI correctly
           }));
           
           updatedQuiz = {
