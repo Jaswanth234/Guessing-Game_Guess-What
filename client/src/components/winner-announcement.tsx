@@ -246,10 +246,13 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
                                   const correctOptions = selectedOptions.filter(option => 
                                     !question.isDecoy[option]
                                   );
-                                  return (
+                                  const selectedAnswers = correctOptions.map(opt => question.answers[opt]);
+                                  return selectedAnswers.length > 0 ? (
                                     <span key={idx} className="ml-1">
-                                      {correctOptions.map(opt => question.answers[opt]).join(', ')}
+                                      {selectedAnswers.join(', ')}
                                     </span>
+                                  ) : (
+                                    <span key={idx} className="ml-1 text-gray-400">No valid answers selected</span>
                                   );
                                 })}
                               </div>

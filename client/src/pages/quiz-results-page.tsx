@@ -11,6 +11,7 @@ export default function QuizResultsPage() {
   
   const { data: quiz, isLoading, error } = useQuery<Quiz>({
     queryKey: [`/api/quizzes/${id}/results`],
+    refetchInterval: 5000, // Poll for updates
   });
 
   return (
