@@ -10,12 +10,18 @@ import AuthPage from "@/pages/auth-page";
 import { AuthProvider } from "./hooks/use-auth";
 import { ProtectedRoute } from "./lib/protected-route";
 
+// Placeholder component
+function QuizResultsPage() {
+  return <div>Quiz Results</div>;
+}
+
 function Router() {
   return (
     <Switch>
       <ProtectedRoute path="/" component={HomePage} />
       <Route path="/auth" component={AuthPage} />
       <Route path="/quiz/:id" component={QuizPage} />
+      <Route path="/quiz/:id/results" component={QuizResultsPage} />
       <Route component={NotFound} />
     </Switch>
   );
