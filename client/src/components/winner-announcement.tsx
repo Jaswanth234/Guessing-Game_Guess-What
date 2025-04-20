@@ -22,12 +22,12 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
   });
 
   useEffect(() => {
-    if (quiz && quiz.participants && Array.isArray(quiz.participants)) {
+    if (quiz && Array.isArray(quiz.participants) && quiz.participants.length > 0) {
       // Calculate winners based on correct answers and submission time
       const sortedParticipants = [...quiz.participants]
         .map(participant => {
           // Count correct answers
-          const correctCount = participant.answers.filter((answer, idx) => {
+          const correctCount = participant.answers.filter((answer: any, idx: number) => {
             if (idx >= quiz.questions.length) return false;
             
             if (quiz.gameMode === "single") {

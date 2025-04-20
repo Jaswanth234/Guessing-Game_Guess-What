@@ -93,16 +93,53 @@ export class DatabaseStorage implements IStorage {
 
   async getQuiz(id: number): Promise<Quiz | undefined> {
     const [quiz] = await db.select().from(quizzes).where(eq(quizzes.id, id));
+    
+    if (quiz) {
+      // Fetch participants for this quiz
+      const quizParticipants = await this.getParticipantsByQuiz(id);
+      
+      // Attach participants to the quiz
+      return {
+        ...quiz,
+        participants: quizParticipants
+      };
+    }
+    
     return quiz;
   }
 
   async getQuizByShortCode(shortCode: string): Promise<Quiz | undefined> {
     const [quiz] = await db.select().from(quizzes).where(eq(quizzes.shortCode, shortCode));
+    
+    if (quiz) {
+      // Fetch participants for this quiz
+      const quizParticipants = await this.getParticipantsByQuiz(quiz.id);
+      
+      // Attach participants to the quiz
+      return {
+        ...quiz,
+        participants: quizParticipants
+      };
+    }
+    
     return quiz;
   }
 
   async getQuizzesByHost(hostId: number): Promise<Quiz[]> {
-    return await db.select().from(quizzes).where(eq(quizzes.hostId, hostId));
+    const hostQuizzes = await db.select().from(quizzes).where(eq(quizzes.hostId, hostId));
+    
+    // Fetch participants for each quiz
+    const quizzesWithParticipants = await Promise.all(
+      hostQuizzes.map(async (quiz) => {
+        const quizParticipants = await this.getParticipantsByQuiz(quiz.id);
+        return {
+          ...quiz,
+          participants: quizParticipants
+        };
+      })
+    );
+    
+    return quizzesWithParticipants;
   }
 
   async updateQuizStatus(id: number, status: QuizStatus): Promise<Quiz> {
@@ -116,7 +153,14 @@ export class DatabaseStorage implements IStorage {
       throw new Error(`Quiz with ID ${id} not found`);
     }
     
-    return updatedQuiz;
+    // Fetch participants for this quiz
+    const quizParticipants = await this.getParticipantsByQuiz(id);
+    
+    // Return the updated quiz with participants
+    return {
+      ...updatedQuiz,
+      participants: quizParticipants
+    };
   }
 
   // Participant methods
