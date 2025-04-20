@@ -249,7 +249,15 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
 
               {/* Action Buttons */}
               <div className="mt-8 flex flex-col sm:flex-row sm:justify-center space-y-3 sm:space-y-0 sm:space-x-4">
-                <Button variant="outline" className="inline-flex justify-center items-center">
+                <Button 
+                  variant="outline" 
+                  className="inline-flex justify-center items-center"
+                  onClick={() => {
+                    const shareUrl = `${window.location.origin}/quiz/${quizId}/results`;
+                    navigator.clipboard.writeText(shareUrl);
+                    // You can add a toast notification here to show success
+                  }}
+                >
                   <svg 
                     xmlns="http://www.w3.org/2000/svg" 
                     className="h-5 w-5 mr-2 text-gray-500" 
@@ -266,7 +274,12 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
                   </svg>
                   Share Results
                 </Button>
-                <Button className="inline-flex justify-center items-center">
+                <Button 
+                  className="inline-flex justify-center items-center"
+                  onClick={() => {
+                    window.location.href = `/quiz/${quizId}/results`;
+                  }}
+                >
                   <svg 
                     xmlns="http://www.w3.org/2000/svg" 
                     className="h-5 w-5 mr-2" 
