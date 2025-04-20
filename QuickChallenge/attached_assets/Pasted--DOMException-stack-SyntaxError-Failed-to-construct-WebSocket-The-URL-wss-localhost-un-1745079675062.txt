@@ -1,0 +1,30 @@
+
+DOMException {}
+stack: "SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=toeYP6X-gp8N' is invalid.↵ at new t (https://59d8c205-1b96-457e-9010-5f281ff1e82f-00-3d7w4uyxih6u1.kirk.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:218737)↵ at setupWebSocket (https://59d8c205-1b96-457e-9010-5f281ff1e82f-00-3d7w4uyxih6u1.kirk.replit.dev/@vite/client:536:19)↵ at fallback (https://59d8c205-1b96-457e-9010-5f281ff1e82f-00-3d7w4uyxih6u1.kirk.replit.dev/@vite/client:509:16)↵ at WebSocket.<anonymous> (https://59d8c205-1b96-457e-9010-5f281ff1e82f-00-3d7w4uyxih6u1.kirk.replit.dev/@vite/client:555:7)"
+get stack: ƒ ()
+set stack: ƒ ()
+[[Prototype]]: DOMException
+
+at t.value (https://59d8c205-1b96-457e-9010-5f281ff1e82f-00-3d7w4uyxih6u1.kirk.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:17465)
+at new t (https://59d8c205-1b96-457e-9010-5f281ff1e82f-00-3d7w4uyxih6u1.kirk.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:12630)
+at t.value (https://59d8c205-1b96-457e-9010-5f281ff1e82f-00-3d7w4uyxih6u1.kirk.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:32766)
+at https://59d8c205-1b96-457e-9010-5f281ff1e82f-00-3d7w4uyxih6u1.kirk.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:34400
+Warning: validateDOMNesting(...): <a> cannot appear as a descendant of &lt;a&gt;.
+    at a
+    at a
+    at https://59d8c205-1b96-457e-9010-5f281ff1e82f-00-3d7w4uyxih6u1.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=9666a1bb:337:18
+    at div
+    at div
+    at nav
+    at Navbar (https://59d8c205-1b96-457e-9010-5f281ff1e82f-00-3d7w4uyxih6u1.kirk.replit.dev/src/components/navigation/navbar.tsx:25:39)
+    at div
+    at LandingLayout (https://59d8c205-1b96-457e-9010-5f281ff1e82f-00-3d7w4uyxih6u1.kirk.replit.dev/src/components/layouts/landing-layout.tsx:19:26)
+    at HomePage (https://59d8c205-1b96-457e-9010-5f281ff1e82f-00-3d7w4uyxih6u1.kirk.replit.dev/src/pages/home-page.tsx:33:27)
+    at Route (https://59d8c205-1b96-457e-9010-5f281ff1e82f-00-3d7w4uyxih6u1.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=9666a1bb:323:16)
+    at Switch (https://59d8c205-1b96-457e-9010-5f281ff1e82f-00-3d7w4uyxih6u1.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=9666a1bb:379:17)
+    at Router
+    at Provider (https://59d8c205-1b96-457e-9010-5f281ff1e82f-00-3d7w4uyxih6u1.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UBQ2LXDH.js?v=9666a1bb:22:15)
+    at TooltipProvider (https://59d8c205-1b96-457e-9010-5f281ff1e82f-00-3d7w4uyxih6u1.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=9666a1bb:62:5)
+    at App
+    at AuthProvider (https://59d8c205-1b96-457e-9010-5f281ff1e82f-00-3d7w4uyxih6u1.kirk.replit.dev/src/hooks/use-auth.tsx?v=0cqOPipQTNoxt74azM9_j:26:32)
+    at QueryClientProvider (https://59d8c205-1b96-457e-9010-5f281ff1e82f-00-3d7w4uyxih6u1.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=9666a1bb:2805:3)

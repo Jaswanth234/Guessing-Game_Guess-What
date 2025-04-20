@@ -1,0 +1,60 @@
+Title: AI-Powered Interactive Quiz Game Website  
+
+Description:
+Build a web-based quiz game platform where a host can create and manage quiz sessions, and users can participate in real-time. The platform should support both *Single Entry Mode* (where users type answers) and *Multi-Choice Mode* (where users select from predefined options). The system should detect winners based on correct answers and allocate prizes accordingly.  
+
+Key Features: 
+
+Host Registration & Setup
+- Host registers with ID & password.  
+- Enters personal details: Name, Email, Phone Number.  
+- Defines the *subject* of the game.  
+- Creates a *section* (sub-topic of the subject).  
+- Selects *game mode*:  
+  - *Single Entry Mode*: Users enter answers manually.  
+  - *Multi-Choice Mode*: Users choose from multiple answers.  
+- Enters all correct answers based on mode:  
+  - If *Single Entry Mode*, enters all possible correct answers.  
+  - If *Multi-Choice Mode*, enters correct answers + extra incorrect answers.  
+  - Defines the correct answers using numbers (index-based selection).  
+- Selects the *number of prizes* to allocate:  
+  - 1st Prize ✅  
+  - 2nd Prize ✅  
+  - 3rd Prize ✅  
+  - 4th Prize ✅  
+  - 5th Prize ✅  
+- Sets *start time* and *end time* for the game session.  
+- Generates a *QR Code* or a *unique link* for user participation.  
+- Shares the QR Code/Link via SMS, Email, or WhatsApp group.  
+
+User Experience
+- Users receive the game *link or QR Code* and access the game.  
+- Game screen displays:  
+  - *Host Name*  
+  - *Occasion Name* (if applicable)  
+  - *Start & End Timer* (Countdown Clock)  
+  - *Subject Name & Section Name*  
+- Based on the mode:  
+  - *Single Entry Mode*: Blank rows for users to enter answers.  
+  - *Multi-Choice Mode*: Checkboxes for multiple selections.  
+- Users must submit answers *before the timer expires*.  
+- The system *automatically evaluates answers* and determines winners.  
+
+#### *Winner Announcement*  
+- The system detects correct responses and ranks winners.  
+- Displays *1st, 2nd, 3rd place winners*, based on correctness and submission time.  
+- Option to notify winners via Email, SMS, or WhatsApp.  
+
+Tech Stack Recommendations:  
+- Frontend: React (with Tailwind CSS)  
+- Backend: Node.js (Express)  
+- Database
+- Authentication:* JWT-based auth for hosts  
+- *Real-time Features:* WebSockets for live countdown and game updates  
+- *QR Code Generation:* QR code library for session access  
+- **Deployment
+
+Additional Features (Optional):
+- Leaderboard & User Statistics  
+- Multiple Game Sessions Management  
+- Admin Dashboard for Monitoring
