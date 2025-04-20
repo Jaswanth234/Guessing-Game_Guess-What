@@ -113,7 +113,7 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
           </p>
         </div>
 
-        <div className="px-4 py-5 sm:p-6">
+        <div className="px-4 py-5 sm:p-6 results-content">
           {winners.length > 0 ? (
             <>
               {/* Top 3 Winners Display */}
@@ -331,21 +331,82 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
                         <div className="flex gap-2 mt-1.5">
                           <Button
                             variant="outline"
-                            onClick={() => {
-                              const shareUrl = `${window.location.origin}/quiz/${quizId}/results`;
-                              window.open(`https://wa.me/?text=${encodeURIComponent(`Check out the quiz results! ${shareUrl}`)}`, '_blank');
+                            onClick={async () => {
+                              // Take screenshot
+                              const element = document.querySelector('.results-content');
+                              if (!element) return;
+                              
+                              try {
+                                const canvas = await html2canvas(element);
+                                const imgData = canvas.toDataURL('image/png');
+                                
+                                // Share via WhatsApp
+                                const shareUrl = `whatsapp://send?text=Quiz Results`;
+                                const blob = await (await fetch(imgData)).blob();
+                                const file = new File([blob], 'quiz-results.png', { type: 'image/png' });
+                                
+                                if (navigator.share && navigator.canShare({ files: [file] })) {
+                                  await navigator.share({
+                                    files: [file],
+                                    title: 'Quiz Results',
+                                    text: 'Check out my quiz results!'
+                                  });
+                                } else {
+                                  // Fallback for browsers without Web Share API
+                                  const a = document.createElement('a');
+                                  a.href = imgData;
+                                  a.download = 'quiz-results.png';
+                                  a.click();
+                                  
+                                  window.open(`https://wa.me/?text=${encodeURIComponent('Check out my quiz results!')}`, '_blank');
+                                }
+                              } catch (err) {
+                                console.error('Error sharing:', err);
+                                toast({
+                                  title: "Error",
+                                  description: "Failed to share results",
+                                  variant: "destructive"
+                                });
+                              }
                             }}
                           >
-                            WhatsApp
+                            Share via WhatsApp
                           </Button>
                           <Button
                             variant="outline"
-                            onClick={() => {
-                              const shareUrl = `${window.location.origin}/quiz/${quizId}/results`;
-                              window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out the quiz results! ${shareUrl}`)}`, '_blank');
+                            onClick={async () => {
+                              // Take screenshot
+                              const element = document.querySelector('.results-content');
+                              if (!element) return;
+                              
+                              try {
+                                const canvas = await html2canvas(element);
+                                const imgData = canvas.toDataURL('image/png');
+                                
+                                // Share via email
+                                const subject = encodeURIComponent('Quiz Results');
+                                const body = encodeURIComponent('Check out my quiz results!');
+                                const mailtoLink = `mailto:?subject=${subject}&body=${body}`;
+                                
+                                // First download the image
+                                const a = document.createElement('a');
+                                a.href = imgData;
+                                a.download = 'quiz-results.png';
+                                a.click();
+                                
+                                // Then open email client
+                                window.location.href = mailtoLink;
+                              } catch (err) {
+                                console.error('Error sharing:', err);
+                                toast({
+                                  title: "Error",
+                                  description: "Failed to share results",
+                                  variant: "destructive"
+                                });
+                              }
                             }}
                           >
-                            Twitter
+                            Share via Email
                           </Button>
                         </div>
                       </div>
