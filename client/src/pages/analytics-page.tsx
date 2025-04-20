@@ -52,9 +52,9 @@ export default function AnalyticsPage() {
   };
 
   const quizCountByStatus = quizzes ? {
-    active: quizzes.filter(q => q.status === QuizStatus.ACTIVE).length,
-    scheduled: quizzes.filter(q => q.status === QuizStatus.SCHEDULED).length,
-    completed: quizzes.filter(q => q.status === QuizStatus.COMPLETED).length,
+    active: quizzes.filter(q => q.status === "Active").length,
+    scheduled: quizzes.filter(q => q.status === "Scheduled").length,
+    completed: quizzes.filter(q => q.status === "Completed").length,
     total: quizzes.length
   } : { active: 0, scheduled: 0, completed: 0, total: 0 };
   
@@ -266,7 +266,7 @@ export default function AnalyticsPage() {
               {quizzes.slice(0, 5).map((quiz) => (
                 <div key={quiz.id} className="flex justify-between items-center p-2 border-b">
                   <span className="font-medium">{quiz.subject}: {quiz.section}</span>
-                  <span className="text-sm">{quiz.participantCount || 0} participants</span>
+                  <span className="text-sm">{getParticipantCount(quiz)} participants</span>
                 </div>
               ))}
             </div>
