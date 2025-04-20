@@ -26,33 +26,30 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
       // Calculate winners based on correct answers and submission time
       const sortedParticipants = [...quiz.participants]
         .map(participant => {
+          // Count correct answers
+          // Parse answers which might be in comma-separated string format
           let correctCount = 0;
           
-          quiz.questions.forEach((question, qIndex) => {
-            const answer = participant.answers[qIndex];
-            
-            if (answer !== undefined) {
-              if (quiz.gameMode === "single") {
-                const correctAnswersArr = question.correctAnswers.map(ans => String(ans).toLowerCase().trim());
-                if (correctAnswersArr.includes(String(answer).toLowerCase().trim())) {
-                  correctCount++;
-                }
-              } else {
-                if (typeof answer === 'string' && answer.includes(',')) {
-                  const selectedAnswers = answer.split(',').map(a => Number(a));
-                  const correctSet = new Set(question.correctAnswers);
-                  
-                  // All selected answers must be correct, and all correct answers must be selected
-                  if (selectedAnswers.every(ans => correctSet.has(ans)) && 
-                      question.correctAnswers.every(ans => selectedAnswers.includes(Number(ans)))) {
-                    correctCount++;
-                  }
-                } else if (question.correctAnswers.includes(Number(answer))) {
-                  correctCount++;
-                }
+          // Handle case where only one question exists
+          const answer = participant.answers[0];
+          if (answer !== undefined) {
+            if (quiz.gameMode === "single") {
+              // In single mode, check if the answer is in the list of correct answers
+              const correctAnswersArr = quiz.questions[0].correctAnswers.map(ans => 
+                String(ans).toLowerCase().trim()
+              );
+              if (correctAnswersArr.includes(String(answer).toLowerCase().trim())) {
+                correctCount++;
               }
-            }
-          });
+            } else {
+              // In multi mode with answer as "0,1,3" format
+              if (typeof answer === 'string' && answer.includes(',')) {
+                const selectedAnswers = answer.split(',').map(a => Number(a));
+                
+                // Check if all selected answers are correct and no incorrect answers are selected
+                const allCorrect = selectedAnswers.every(ans => 
+                  quiz.questions[0].correctAnswers.includes(ans)
+                );
                 
                 // All of the selected answers must match correctAnswers for multiple choice
                 if (allCorrect && 
