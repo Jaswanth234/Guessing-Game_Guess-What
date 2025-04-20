@@ -29,42 +29,29 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
           // Count correct answers
           // Parse answers which might be in comma-separated string format
           let correctCount = 0;
-          
+
           // Handle case where only one question exists
           const answer = participant.answers[0];
           if (answer !== undefined) {
-            if (quiz.gameMode === "single") {
-              // In single mode, check if the answer is in the list of correct answers
-              const correctAnswersArr = quiz.questions[0].correctAnswers.map(ans => 
-                String(ans).toLowerCase().trim()
-              );
-              if (correctAnswersArr.includes(String(answer).toLowerCase().trim())) {
+            // Handle both single and multi mode scoring
+            if (typeof answer === 'string') {
+              const selectedAnswers = answer.includes(',') 
+                ? answer.split(',').map(a => Number(a))
+                : [Number(answer)];
+
+              const correctAnswers = quiz.questions[0].correctAnswers;
+
+              // Check if selected answers match exactly with correct answers
+              const isCorrect = selectedAnswers.length === correctAnswers.length &&
+                selectedAnswers.every(ans => correctAnswers.includes(ans)) &&
+                correctAnswers.every(ans => selectedAnswers.includes(ans));
+
+              if (isCorrect) {
                 correctCount++;
-              }
-            } else {
-              // In multi mode with answer as "0,1,3" format
-              if (typeof answer === 'string' && answer.includes(',')) {
-                const selectedAnswers = answer.split(',').map(a => Number(a));
-                
-                // Check if all selected answers are correct and no incorrect answers are selected
-                const allCorrect = selectedAnswers.every(ans => 
-                  quiz.questions[0].correctAnswers.includes(ans)
-                );
-                
-                // All of the selected answers must match correctAnswers for multiple choice
-                if (allCorrect && 
-                    quiz.questions[0].correctAnswers.some(ans => selectedAnswers.includes(ans))) {
-                  correctCount++;
-                }
-              } else {
-                // Single answer in multi mode
-                if (quiz.questions[0].correctAnswers.includes(Number(answer))) {
-                  correctCount++;
-                }
               }
             }
           }
-          
+
           return {
             ...participant,
             correctCount,
@@ -117,7 +104,7 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
           <h3 className="text-lg leading-6 font-medium text-center">🎉 Quiz Results 🎉</h3>
           <p className="mt-1 max-w-2xl text-sm text-center">{quiz.subject}: {quiz.section}</p>
         </CardContent>
-        
+
         <div className="bg-gray-50 px-4 py-6 sm:px-6 text-center">
           <h2 className="text-2xl font-bold text-gray-900">Quiz Complete!</h2>
           <p className="mt-1 text-sm text-gray-500">
@@ -183,7 +170,7 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
               {winners.some(w => w.place > 3) && (
                 <div className="mt-10 border-t border-gray-200 pt-6">
                   <h3 className="text-sm font-medium text-gray-500 text-center mb-4">Additional Prize Winners</h3>
-                  
+
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     {winners
                       .filter(winner => winner.place > 3)
