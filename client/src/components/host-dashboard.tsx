@@ -594,10 +594,37 @@ export default function HostDashboard() {
                             {quiz.subject}: {quiz.section}
                           </p>
                         </div>
-                        <div className="ml-2 flex-shrink-0 flex">
+                        <div className="ml-2 flex-shrink-0 flex items-center space-x-2">
                           <p className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(quiz.status)}`}>
                             {quiz.status}
                           </p>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-600 hover:text-red-900"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              if (window.confirm('Are you sure you want to delete this quiz?')) {
+                                apiRequest('DELETE', `/api/quizzes/${quiz.id}`)
+                                  .then(() => {
+                                    queryClient.invalidateQueries({ queryKey: ['/api/quizzes'] });
+                                    toast({
+                                      title: "Quiz Deleted",
+                                      description: "The quiz has been deleted successfully.",
+                                    });
+                                  })
+                                  .catch((error) => {
+                                    toast({
+                                      title: "Error",
+                                      description: error.message,
+                                      variant: "destructive",
+                                    });
+                                  });
+                              }
+                            }}
+                          >
+                            Delete
+                          </Button>
                         </div>
                       </div>
                       <div className="mt-2 sm:flex sm:justify-between">

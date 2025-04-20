@@ -125,6 +125,12 @@ export class DatabaseStorage implements IStorage {
     return quiz;
   }
 
+  async deleteQuiz(id: number): Promise<void> {
+    // Delete participants first due to foreign key constraint
+    await db.delete(participants).where(eq(participants.quizId, id));
+    await db.delete(quizzes).where(eq(quizzes.id, id));
+  }
+
   async getQuizzesByHost(hostId: number): Promise<Quiz[]> {
     const hostQuizzes = await db.select().from(quizzes).where(eq(quizzes.hostId, hostId));
     

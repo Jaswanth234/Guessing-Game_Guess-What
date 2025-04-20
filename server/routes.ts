@@ -216,6 +216,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Delete a quiz
+  app.delete("/api/quizzes/:id", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const quizId = parseInt(req.params.id);
+      if (isNaN(quizId)) {
+        return res.status(400).json({ message: "Invalid quiz ID" });
+      }
+
+      const quiz = await storage.getQuiz(quizId);
+      if (!quiz) {
+        return res.status(404).json({ message: "Quiz not found" });
+      }
+
+      // Only allow host to delete their own quizzes
+      if (quiz.hostId !== req.user.id) {
+        return res.status(403).json({ message: "Not authorized" });
+      }
+
+      await storage.deleteQuiz(quizId);
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting quiz:", error);
+      res.status(500).json({ message: "Failed to delete quiz" });
+    }
+  });
+
   // Get quiz results (only available after quiz has ended)
   app.get("/api/quizzes/:id/results", async (req, res) => {
     try {
