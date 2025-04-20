@@ -167,9 +167,28 @@ export default function PlayerArea() {
   };
 
   // Handle multi-choice selection
-  const handleMultiChoiceSelect = (questionIndex: number, answerIndex: number) => {
+  const handleMultiChoiceSelect = (questionIndex: number, answerIndex: number, selectionType: string) => {
     const newAnswers = [...answers];
-    newAnswers[questionIndex] = answerIndex.toString();
+    
+    if (selectionType === "multiple") {
+      // For multiple selection, toggle the selected answer
+      const currentAnswers = newAnswers[questionIndex] ? newAnswers[questionIndex].split(',') : [];
+      const answerStr = answerIndex.toString();
+      
+      if (currentAnswers.includes(answerStr)) {
+        // Remove if already selected
+        const filteredAnswers = currentAnswers.filter(a => a !== answerStr);
+        newAnswers[questionIndex] = filteredAnswers.join(',');
+      } else {
+        // Add if not selected
+        currentAnswers.push(answerStr);
+        newAnswers[questionIndex] = currentAnswers.join(',');
+      }
+    } else {
+      // For single selection or dropdown
+      newAnswers[questionIndex] = answerIndex.toString();
+    }
+    
     setAnswers(newAnswers);
   };
 
@@ -382,26 +401,63 @@ export default function PlayerArea() {
                       />
                     ) : (
                       <div className="space-y-2">
-                        {question.answers.map((option, optionIndex) => (
-                          <div key={optionIndex} className="flex items-center">
-                            <input
-                              type="radio"
-                              id={`q${index}-a${optionIndex}`}
-                              name={`q${index}`}
-                              value={optionIndex}
-                              checked={answers[index] === optionIndex.toString()}
-                              onChange={() => handleMultiChoiceSelect(index, optionIndex)}
-                              className="h-4 w-4 text-primary border-gray-300 focus:ring-primary"
-                              disabled={isSubmitting || isSubmitted || !isActive}
-                            />
-                            <label
-                              htmlFor={`q${index}-a${optionIndex}`}
-                              className="ml-3 block text-sm font-medium text-gray-700"
-                            >
-                              {option}
-                            </label>
-                          </div>
-                        ))}
+                        {question.answers.map((option, optionIndex) => {
+                          // Determine if this option is selected
+                          const currentAnswers = answers[index] ? answers[index].split(',') : [];
+                          const isSelected = currentAnswers.includes(optionIndex.toString());
+                          
+                          return (
+                            <div key={optionIndex} className="flex items-center">
+                              {question.selectionType === "multiple" ? (
+                                <input
+                                  type="checkbox"
+                                  id={`q${index}-a${optionIndex}`}
+                                  name={`q${index}`}
+                                  value={optionIndex}
+                                  checked={isSelected}
+                                  onChange={() => handleMultiChoiceSelect(index, optionIndex, question.selectionType)}
+                                  className="h-4 w-4 text-primary border-gray-300 focus:ring-primary rounded"
+                                  disabled={isSubmitting || isSubmitted || !isActive}
+                                />
+                              ) : question.selectionType === "dropdown" ? (
+                                <select
+                                  id={`q${index}-select`}
+                                  value={answers[index] || ""}
+                                  onChange={(e) => handleMultiChoiceSelect(index, parseInt(e.target.value), question.selectionType)}
+                                  className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md"
+                                  disabled={isSubmitting || isSubmitted || !isActive}
+                                >
+                                  <option value="" disabled>Select an answer</option>
+                                  {question.answers.map((opt, idx) => (
+                                    <option key={idx} value={idx}>
+                                      {opt}
+                                    </option>
+                                  ))}
+                                </select>
+                              ) : (
+                                <input
+                                  type="radio"
+                                  id={`q${index}-a${optionIndex}`}
+                                  name={`q${index}`}
+                                  value={optionIndex}
+                                  checked={answers[index] === optionIndex.toString()}
+                                  onChange={() => handleMultiChoiceSelect(index, optionIndex, question.selectionType)}
+                                  className="h-4 w-4 text-primary border-gray-300 focus:ring-primary"
+                                  disabled={isSubmitting || isSubmitted || !isActive}
+                                />
+                              )}
+                              
+                              {question.selectionType !== "dropdown" && (
+                                <label
+                                  htmlFor={`q${index}-a${optionIndex}`}
+                                  className="ml-3 block text-sm font-medium text-gray-700"
+                                >
+                                  {option}
+                                </label>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
                     )}
                   </div>
