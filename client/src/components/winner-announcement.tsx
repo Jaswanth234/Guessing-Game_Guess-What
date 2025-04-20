@@ -232,9 +232,25 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
                             <div className="text-sm font-medium text-gray-900">{participant.playerName}</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">{participant.correctCount} correct</div>
-                            <div className="text-xs text-gray-500">
-                              out of {quiz.questions.length} questions
+                            <div>
+                              <div className="text-sm text-gray-900">{participant.correctCount} correct</div>
+                              <div className="text-xs text-gray-500">
+                                Selected options: {participant.answers.map((answer, idx) => {
+                                  const selectedOptions = answer.split(',').map(Number);
+                                  const question = quiz.questions[idx];
+                                  const correctOptions = selectedOptions.filter(option => 
+                                    !question.isDecoy[option]
+                                  );
+                                  return (
+                                    <span key={idx} className="ml-1">
+                                      {correctOptions.map(opt => question.answers[opt]).join(', ')}
+                                    </span>
+                                  );
+                                })}
+                              </div>
+                              <div className="text-xs text-gray-500">
+                                out of {quiz.questions.length} questions
+                              </div>
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
