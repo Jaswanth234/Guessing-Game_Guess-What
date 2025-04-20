@@ -41,10 +41,8 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
 
               const correctAnswers = quiz.questions[0].correctAnswers;
 
-              // Check if selected answers match exactly with correct answers
-              const isCorrect = selectedAnswers.length === correctAnswers.length &&
-                selectedAnswers.every(ans => correctAnswers.includes(ans)) &&
-                correctAnswers.every(ans => selectedAnswers.includes(ans));
+              // For multiple selection questions, count as correct if all required answers are selected
+              const isCorrect = correctAnswers.every(ans => selectedAnswers.includes(ans));
 
               if (isCorrect) {
                 correctCount++;
