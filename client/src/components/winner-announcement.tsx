@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 import { Quiz, QuizStatus, Participant } from "@shared/schema";
 
 interface WinnerAnnouncementProps {
@@ -15,6 +19,7 @@ type Winner = Participant & {
 
 export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) {
   const [winners, setWinners] = useState<Winner[]>([]);
+  const { toast } = useToast();
 
   // Fetch quiz results
   const { data: quiz, isLoading } = useQuery<Quiz>({
@@ -265,31 +270,85 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
 
               {/* Action Buttons */}
               <div className="mt-8 flex flex-col sm:flex-row sm:justify-center space-y-3 sm:space-y-0 sm:space-x-4">
-                <Button 
-                  variant="outline" 
-                  className="inline-flex justify-center items-center"
-                  onClick={() => {
-                    const shareUrl = `${window.location.origin}/quiz/${quizId}/results`;
-                    navigator.clipboard.writeText(shareUrl);
-                    // You can add a toast notification here to show success
-                  }}
-                >
-                  <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    className="h-5 w-5 mr-2 text-gray-500" 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
-                    stroke="currentColor"
-                  >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth="2" 
-                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" 
-                    />
-                  </svg>
-                  Share Results
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      className="inline-flex justify-center items-center"
+                    >
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        className="h-5 w-5 mr-2 text-gray-500" 
+                        fill="none" 
+                        viewBox="0 0 24 24" 
+                        stroke="currentColor"
+                      >
+                        <path 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round" 
+                          strokeWidth="2" 
+                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" 
+                        />
+                      </svg>
+                      Share Results
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Share Quiz Results</DialogTitle>
+                      <DialogDescription>
+                        Share the quiz results with participants via a direct link.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <Label>Results Link</Label>
+                        <div className="flex mt-1.5">
+                          <Input 
+                            readOnly 
+                            value={`${window.location.origin}/quiz/${quizId}/results`}
+                          />
+                          <Button
+                            className="ml-2"
+                            onClick={() => {
+                              const shareUrl = `${window.location.origin}/quiz/${quizId}/results`;
+                              navigator.clipboard.writeText(shareUrl);
+                              toast({
+                                title: "Link copied",
+                                description: "Results link copied to clipboard"
+                              });
+                            }}
+                          >
+                            Copy
+                          </Button>
+                        </div>
+                      </div>
+                      <div>
+                        <Label>Share via</Label>
+                        <div className="flex gap-2 mt-1.5">
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              const shareUrl = `${window.location.origin}/quiz/${quizId}/results`;
+                              window.open(`https://wa.me/?text=${encodeURIComponent(`Check out the quiz results! ${shareUrl}`)}`, '_blank');
+                            }}
+                          >
+                            WhatsApp
+                          </Button>
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              const shareUrl = `${window.location.origin}/quiz/${quizId}/results`;
+                              window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out the quiz results! ${shareUrl}`)}`, '_blank');
+                            }}
+                          >
+                            Twitter
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </>
           ) : (
