@@ -9,7 +9,7 @@ import { Quiz } from "@shared/schema";
 export default function QuizResultsPage() {
   const { id } = useParams();
   
-  const { data: quiz, isLoading } = useQuery<Quiz>({
+  const { data: quiz, isLoading, error } = useQuery<Quiz>({
     queryKey: [`/api/quizzes/${id}/results`],
   });
 
@@ -24,8 +24,16 @@ export default function QuizResultsPage() {
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
               <p className="mt-4 text-gray-500">Loading results...</p>
             </div>
-          ) : (
+          ) : error ? (
+            <div className="py-10 text-center">
+              <p className="text-red-500">Error loading quiz results</p>
+            </div>
+          ) : quiz ? (
             <WinnerAnnouncement quizId={id || ""} />
+          ) : (
+            <div className="py-10 text-center">
+              <p className="text-gray-500">Quiz not found or results not available</p>
+            </div>
           )}
         </div>
       </main>
