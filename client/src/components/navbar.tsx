@@ -44,26 +44,16 @@ export default function Navbar() {
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
             {user && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="relative h-8 w-8 rounded-full"
-                  >
-                    <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-white font-semibold">
-                      {user.username.substring(0, 1).toUpperCase()}
-                    </div>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>Settings</DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout}>
-                    Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <div className="flex items-center gap-4">
+                <span className="text-gray-700">{user.username}</span>
+                <Button
+                  variant="ghost" 
+                  onClick={handleLogout}
+                  className="text-sm"
+                >
+                  Logout
+                </Button>
+              </div>
             )}
           </div>
           <div className="-mr-2 flex items-center sm:hidden">
