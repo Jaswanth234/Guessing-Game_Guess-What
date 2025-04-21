@@ -172,5 +172,68 @@ export function useWebSocket(url: string) {
    - Social media sharing
    - Custom branding options
 
+## Database Schema
+
+### User Schema
+```sql
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  username TEXT NOT NULL UNIQUE,
+  password TEXT NOT NULL,
+  name TEXT,
+  email TEXT,
+  phone TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+### Quiz Schema
+```sql
+CREATE TABLE quizzes (
+  id SERIAL PRIMARY KEY,
+  host_id INTEGER NOT NULL REFERENCES users(id),
+  host_name TEXT,
+  subject TEXT NOT NULL,
+  section TEXT NOT NULL,
+  game_mode TEXT NOT NULL,
+  num_prizes INTEGER NOT NULL DEFAULT 3,
+  start_time TIMESTAMP NOT NULL,
+  end_time TIMESTAMP NOT NULL,
+  status TEXT NOT NULL DEFAULT 'Scheduled',
+  short_code TEXT NOT NULL UNIQUE,
+  created_at TIMESTAMP DEFAULT NOW(),
+  questions JSONB NOT NULL
+);
+```
+
+The questions field is a JSONB type with the following structure:
+```typescript
+{
+  text: string;
+  answers: string[];
+  correctAnswers: (string | number)[];
+  isDecoy?: boolean[];
+  selectionType: "single" | "multiple" | "dropdown";
+}[]
+```
+
+### Participant Schema
+```sql
+CREATE TABLE participants (
+  id SERIAL PRIMARY KEY,
+  quiz_id INTEGER NOT NULL REFERENCES quizzes(id),
+  player_name TEXT NOT NULL,
+  answers JSONB NOT NULL,
+  submitted_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+### Key Features of the Schema
+- **User Management**: Stores user authentication and profile information
+- **Quiz Configuration**: Comprehensive quiz settings including timing, mode, and prizes
+- **Dynamic Questions**: Flexible JSONB storage for various question types
+- **Participant Tracking**: Records participant responses and submission times
+- **Referential Integrity**: Foreign key constraints ensure data consistency
+
 ## Conclusion
-QuizMaster represents a robust and scalable solution for interactive quiz management. Its modern architecture and comprehensive feature set make it suitable for various use cases, from educational institutions to corporate training programs.
+QuizMaster represents a robust and scalable solution for interactive quiz management. Its modern architecture and comprehensive feature set make it suitable for various use cases, from educational institutions to corporate training programs.table for various use cases, from educational institutions to corporate training programs.
