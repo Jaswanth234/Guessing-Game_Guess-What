@@ -33,8 +33,13 @@ export function useWebSocket(
   const reconnectCount = useRef<number>(0);
   const reconnectTimeoutRef = useRef<number | null>(null);
 
-  // Append the specific WebSocket path
-  const fullUrl = url.includes('/api/ws') ? url : `${window.location.origin.replace('http', 'ws')}/api/ws`;
+  // Append the specific WebSocket path and ensure we use the correct protocol
+  let fullUrl = url;
+  if (!url.includes('/api/ws')) {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    fullUrl = `${protocol}//${window.location.host}/api/ws`;
+  }
+  console.log('WebSocket URL:', fullUrl);
 
   const connect = useCallback(() => {
     if (webSocket.current?.readyState === WebSocket.OPEN) return;

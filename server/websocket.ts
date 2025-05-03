@@ -22,6 +22,8 @@ export function setupWebSockets(server: HttpServer): void {
     path: "/api/ws"
   });
   
+  console.log("WebSocket server is running");
+  
   // Map to store client connections
   const clients: Map<WebSocket, ClientConnection> = new Map();
   
