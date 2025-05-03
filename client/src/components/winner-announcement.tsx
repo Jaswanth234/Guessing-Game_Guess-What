@@ -42,15 +42,14 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
             const selectedAnswers = answer.includes(',') 
               ? answer.split(',').map(a => Number(a))
               : [Number(answer)];
-
-            // Count non-decoy answers as correct
-            const nonDecoyCount = selectedAnswers.filter(opt => 
-              !question.isDecoy[opt]
+              
+            // Count correct answers based on question's correctAnswers
+            const correctAnswersCount = selectedAnswers.filter(opt => 
+              question.correctAnswers.includes(opt)
             ).length;
-
-            if (nonDecoyCount > 0) {
-              correctCount++;
-            }
+            
+            // Add to total correct count
+            correctCount += correctAnswersCount;
           });
 
           return {
@@ -244,7 +243,7 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
                                   const selectedOptions = answer.split(',').map(Number);
                                   const question = quiz.questions[idx];
                                   const correctOptions = selectedOptions.filter(option => 
-                                    !question.isDecoy[option]
+                                    question.correctAnswers.includes(option)
                                   );
                                   const selectedAnswers = correctOptions.map(opt => question.answers[opt]);
                                   return selectedAnswers.length > 0 ? (
@@ -252,7 +251,7 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
                                       {selectedAnswers.join(', ')}
                                     </span>
                                   ) : (
-                                    <span key={idx} className="ml-1 text-gray-400">No valid answers selected</span>
+                                    <span key={idx} className="ml-1 text-gray-400">No correct answers selected</span>
                                   );
                                 })}
                               </div>
