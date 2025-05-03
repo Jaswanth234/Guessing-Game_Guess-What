@@ -43,11 +43,19 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
               ? answer.split(',').map((a: string) => Number(a))
               : [Number(answer)];
               
-            // Count correct answers based on question's correctAnswers
-            const correctAnswersCount = selectedAnswers.filter((opt: number) => 
-              Array.isArray(question.correctAnswers) && 
-              question.correctAnswers.includes(opt)
-            ).length;
+            // Debug the correct answers array
+            console.log(`Question ${idx} correctAnswers:`, question.correctAnswers);
+            
+            // Count how many of the selected answers are in the correctAnswers array
+            let correctAnswersCount = 0;
+            
+            // Only count if the correctAnswers array exists and has items
+            if (Array.isArray(question.correctAnswers) && question.correctAnswers.length > 0) {
+              // Count intersection between selected answers and correct answers
+              correctAnswersCount = selectedAnswers.filter((opt: number) => 
+                question.correctAnswers.includes(opt)
+              ).length;
+            }
             
             // Add to total correct count
             correctCount += correctAnswersCount;
@@ -261,8 +269,15 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
                                     <span key={idx} className="block my-1 ml-1">
                                       <span className="font-medium">Q{idx+1}:</span>{' '}
                                       {selectedOptions.map((optionIdx: number, i: number) => {
+                                        // For debugging
+                                        console.log(`Question ${idx}:`, question);
+                                        console.log(`Selected option ${optionIdx}, correctAnswers:`, question.correctAnswers);
+                                        
+                                        // Check if this option is in the correct answers array
                                         const isCorrect = Array.isArray(question.correctAnswers) && 
+                                          question.correctAnswers.length > 0 && 
                                           question.correctAnswers.includes(optionIdx);
+                                        
                                         const optionText = Array.isArray(question.answers) && 
                                           question.answers[optionIdx] || 'Unknown option';
                                         
