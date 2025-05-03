@@ -39,12 +39,13 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
             if (!question) return;
 
             // Convert answer string to array of numbers
-            const selectedAnswers = answer.includes(',') 
-              ? answer.split(',').map(a => Number(a))
+            const selectedAnswers = typeof answer === 'string' && answer.includes(',') 
+              ? answer.split(',').map((a: string) => Number(a))
               : [Number(answer)];
               
             // Count correct answers based on question's correctAnswers
-            const correctAnswersCount = selectedAnswers.filter(opt => 
+            const correctAnswersCount = selectedAnswers.filter((opt: number) => 
+              Array.isArray(question.correctAnswers) && 
               question.correctAnswers.includes(opt)
             ).length;
             
@@ -63,7 +64,8 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
             return b.correctCount - a.correctCount;
           }
           // If tied, sort by submission time (ascending)
-          return new Date(a.submittedAt).getTime() - new Date(b.submittedAt).getTime();
+          return new Date(a.submittedAt || Date.now()).getTime() - 
+                 new Date(b.submittedAt || Date.now()).getTime();
         })
         .map((participant, index) => ({
           ...participant,
@@ -235,23 +237,45 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-sm font-medium text-gray-900">{participant.playerName}</div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4">
                             <div>
                               <div className="text-sm text-gray-900">{participant.correctCount} correct</div>
-                              <div className="text-xs text-gray-500">
+                              <div className="text-xs text-gray-500 mt-1">
                                 Selected options: {participant.answers.map((answer, idx) => {
-                                  const selectedOptions = answer.split(',').map(Number);
+                                  // Handle potentially empty answers
+                                  if (!answer || answer === "") {
+                                    return <span key={idx} className="ml-1 text-gray-400">No answer</span>;
+                                  }
+                                  
+                                  const selectedOptions = typeof answer === 'string' 
+                                    ? answer.split(',').map(Number)
+                                    : [Number(answer)];
                                   const question = quiz.questions[idx];
-                                  const correctOptions = selectedOptions.filter(option => 
-                                    question.correctAnswers.includes(option)
-                                  );
-                                  const selectedAnswers = correctOptions.map(opt => question.answers[opt]);
-                                  return selectedAnswers.length > 0 ? (
-                                    <span key={idx} className="ml-1">
-                                      {selectedAnswers.join(', ')}
+                                  
+                                  // If no question found, skip
+                                  if (!question) {
+                                    return <span key={idx} className="ml-1 text-gray-400">Question not found</span>;
+                                  }
+                                  
+                                  return (
+                                    <span key={idx} className="block my-1 ml-1">
+                                      <span className="font-medium">Q{idx+1}:</span>{' '}
+                                      {selectedOptions.map((optionIdx: number, i: number) => {
+                                        const isCorrect = Array.isArray(question.correctAnswers) && 
+                                          question.correctAnswers.includes(optionIdx);
+                                        const optionText = Array.isArray(question.answers) && 
+                                          question.answers[optionIdx] || 'Unknown option';
+                                        
+                                        return (
+                                          <span key={i} className={`${isCorrect ? 'text-green-600' : 'text-red-600'} ${i > 0 ? 'ml-1' : ''}`}>
+                                            {optionText}{i < selectedOptions.length - 1 ? ', ' : ''}
+                                          </span>
+                                        );
+                                      })}
+                                      {selectedOptions.length === 0 && 
+                                        <span className="text-gray-400">No option selected</span>
+                                      }
                                     </span>
-                                  ) : (
-                                    <span key={idx} className="ml-1 text-gray-400">No correct answers selected</span>
                                   );
                                 })}
                               </div>
@@ -261,7 +285,7 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {new Date(participant.submittedAt).toLocaleTimeString()}
+                            {new Date(participant.submittedAt || Date.now()).toLocaleTimeString()}
                           </td>
                         </tr>
                       ))}
