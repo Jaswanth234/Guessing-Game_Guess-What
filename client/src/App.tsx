@@ -29,7 +29,7 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient} onError={(error) => console.error('Query error:', error)}>
       <AuthProvider>
         <TooltipProvider>
           <Toaster />

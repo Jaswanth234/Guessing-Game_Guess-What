@@ -34,7 +34,7 @@ export function useWebSocket(
   const reconnectTimeoutRef = useRef<number | null>(null);
 
   // Append the specific WebSocket path
-  const fullUrl = url.includes('/api/ws') ? url : `${url.replace(/\/$/, '')}/api/ws`;
+  const fullUrl = url.includes('/api/ws') ? url : `${window.location.origin.replace('http', 'ws')}/api/ws`;
 
   const connect = useCallback(() => {
     if (webSocket.current?.readyState === WebSocket.OPEN) return;
