@@ -19,10 +19,25 @@ export function setupWebSockets(server: HttpServer): void {
   // Use a specific path for our WebSocket server to avoid conflicts with Vite
   const wss = new WebSocketServer({ 
     server,
-    path: "/api/ws"
+    path: "/api/ws",
+    perMessageDeflate: {
+      zlibDeflateOptions: {
+        chunkSize: 1024,
+        memLevel: 7,
+        level: 3
+      },
+      zlibInflateOptions: {
+        chunkSize: 10 * 1024
+      },
+      clientNoContextTakeover: true,
+      serverNoContextTakeover: true,
+      serverMaxWindowBits: 10,
+      concurrencyLimit: 10,
+      threshold: 1024
+    }
   });
   
-  console.log("WebSocket server is running");
+  console.log("WebSocket server is running at /api/ws");
   
   // Map to store client connections
   const clients: Map<WebSocket, ClientConnection> = new Map();
@@ -219,6 +234,4 @@ export function setupWebSockets(server: HttpServer): void {
       payload: { message: "Connected to QuizMaster WebSocket server" }
     }));
   });
-  
-  console.log("WebSocket server is running");
 }

@@ -48,7 +48,7 @@ export function useWebSocket(
     webSocket.current = ws;
 
     ws.onopen = (event) => {
-      console.log('WebSocket connected');
+      console.log('WebSocket connected to', fullUrl);
       setReadyState(WebSocket.OPEN);
       reconnectCount.current = 0;
       if (onOpen) onOpen(event);
