@@ -7,9 +7,19 @@ import { promisify } from "util";
 import { storage } from "./storage";
 import { User } from "@shared/schema";
 
+// Extend Express User interface
 declare global {
   namespace Express {
-    interface User extends User {}
+    // This defines what properties will be available on req.user
+    interface User {
+      id: number;
+      username: string;
+      password: string;
+      name: string | null;
+      email: string | null;
+      phone: string | null;
+      createdAt: Date | null;
+    }
   }
 }
 

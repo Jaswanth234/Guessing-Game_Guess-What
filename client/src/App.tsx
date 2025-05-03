@@ -18,7 +18,7 @@ function QuizResultsPage() {
 function Router() {
   return (
     <Switch>
-      <ProtectedRoute path="/" component={HomePage} />
+      <Route path="/" component={HomePage} />
       <Route path="/auth" component={AuthPage} />
       <Route path="/quiz/:id" component={QuizPage} />
       <Route path="/quiz/:id/results" component={QuizResultsPage} />
@@ -29,7 +29,7 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient} onError={(error) => console.error('Query error:', error)}>
+    <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <TooltipProvider>
           <Toaster />
