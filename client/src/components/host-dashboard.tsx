@@ -49,6 +49,12 @@ export default function HostDashboard() {
   ]);
   const [showShareModal, setShowShareModal] = useState(false);
   const [currentQuizId, setCurrentQuizId] = useState<string | null>(null);
+  
+  // Reconduct quiz state
+  const [showReconductModal, setShowReconductModal] = useState(false);
+  const [reconductQuiz, setReconductQuiz] = useState<Quiz | null>(null);
+  const [reconductStartTime, setReconductStartTime] = useState("");
+  const [reconductEndTime, setReconductEndTime] = useState("");
 
   // Fetch quizzes
   const { data: quizzes, isLoading } = useQuery<Quiz[]>({
@@ -299,6 +305,57 @@ export default function HostDashboard() {
     
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   };
+  
+  // Handle reconduct quiz
+  const handleReconductQuiz = (quiz: Quiz) => {
+    setReconductQuiz(quiz);
+    
+    // Set default dates (current time + 5 minutes for start, +15 minutes for end)
+    const now = new Date();
+    const startDate = new Date(now.getTime() + 5 * 60000);
+    const endDate = new Date(now.getTime() + 15 * 60000);
+    
+    // Format dates for datetime-local input
+    const formatDate = (date: Date) => {
+      return date.toISOString().slice(0, 16);
+    };
+    
+    setReconductStartTime(formatDate(startDate));
+    setReconductEndTime(formatDate(endDate));
+    setShowReconductModal(true);
+  };
+  
+  // Submit reconduct quiz
+  const submitReconductQuiz = () => {
+    if (!reconductQuiz || !reconductStartTime || !reconductEndTime) {
+      toast({
+        title: "Validation Error",
+        description: "Please select valid start and end times.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Create new quiz with same data but new times
+    const quizData = {
+      subject: reconductQuiz.subject,
+      section: reconductQuiz.section,
+      gameMode: reconductQuiz.gameMode,
+      numPrizes: reconductQuiz.numPrizes,
+      startTime: new Date(reconductStartTime).toISOString(),
+      endTime: new Date(reconductEndTime).toISOString(),
+      questions: reconductQuiz.questions.map(q => ({
+        text: q.text,
+        answers: q.answers,
+        correctAnswers: q.correctAnswers,
+        isDecoy: q.isDecoy || [],
+        selectionType: q.selectionType || (reconductQuiz.gameMode === "single" ? "single" : "multiple"),
+      })),
+    };
+    
+    createQuizMutation.mutate(quizData);
+    setShowReconductModal(false);
+  };
 
   return (
     <div className="py-6">
@@ -492,17 +549,15 @@ export default function HostDashboard() {
                             );
                           })}
                           
-                          {question.answers.length < 6 && (
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="sm"
-                              className="text-xs text-primary hover:text-primary-700"
-                              onClick={() => addOption(question.id)}
-                            >
-                              + Add Option
-                            </Button>
-                          )}
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="text-xs text-primary hover:text-primary-700"
+                            onClick={() => addOption(question.id)}
+                          >
+                            + Add Option
+                          </Button>
                         </div>
                       </div>
                     )}
@@ -598,6 +653,17 @@ export default function HostDashboard() {
                           <p className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(quiz.status)}`}>
                             {quiz.status}
                           </p>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-green-600 hover:text-green-900"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleReconductQuiz(quiz);
+                            }}
+                          >
+                            Reconduct
+                          </Button>
                           <Button
                             variant="ghost"
                             size="sm"
