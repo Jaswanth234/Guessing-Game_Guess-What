@@ -48,12 +48,25 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
               ? answer.split(',').map((a: string) => Number(a))
               : [Number(answer)];
               
-            // Since the correctAnswers array is empty in this dataset,
-            // We're using a workaround since we know option 0 is the correct one in most cases
+            // Let's count correct answers based on non-decoy options
             let correctAnswersCount = 0;
             
-            // For this specific dataset, option 0 (chicken) is the correct answer
-            if (selectedAnswers.includes(0)) {
+            // Check if the question has the isDecoy property
+            if (question && question.isDecoy && Array.isArray(question.isDecoy)) {
+              // Count each selected answer that is not a decoy as correct
+              for (const selectedOption of selectedAnswers) {
+                // If the selectedOption index is within bounds and not a decoy, it's correct
+                if (
+                  selectedOption >= 0 && 
+                  selectedOption < question.isDecoy.length && 
+                  !question.isDecoy[selectedOption]
+                ) {
+                  correctAnswersCount++;
+                }
+              }
+            } 
+            // Fallback if isDecoy is not available - just count option 0 as correct
+            else if (selectedAnswers.includes(0)) {
               correctAnswersCount = 1;
             }
             
@@ -269,13 +282,17 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
                                     <span key={idx} className="block my-1 ml-1">
                                       <span className="font-medium">Q{idx+1}:</span>{' '}
                                       {selectedOptions.map((optionIdx: number, i: number) => {
-                                        // Set a default correct answer - for this quiz, correct answer is typically index 0
-                                        // This is a fallback since the correctAnswers array is empty in this case
-                                        let correctOption = 0;
+                                        // Determine if the selected option is correct (not a decoy)
                                         let isCorrect = false;
                                         
-                                        // Option 0 (chicken) is almost always the correct answer in this dataset based on logs
-                                        if (optionIdx === 0) {
+                                        // If the question has isDecoy array, check if this option is not a decoy
+                                        if (question.isDecoy && Array.isArray(question.isDecoy) && 
+                                            optionIdx >= 0 && optionIdx < question.isDecoy.length) {
+                                          // If isDecoy[optionIdx] is false, then this is a correct option
+                                          isCorrect = !question.isDecoy[optionIdx];
+                                        }
+                                        // Fallback to treating option 0 as correct
+                                        else if (optionIdx === 0) {
                                           isCorrect = true;
                                         }
                                         
