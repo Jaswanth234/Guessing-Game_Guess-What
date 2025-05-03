@@ -269,8 +269,8 @@ export default function HostDashboard() {
   };
 
   // Format date for display
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+  const formatDate = (dateString: string | Date) => {
+    const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
     return date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
@@ -279,7 +279,7 @@ export default function HostDashboard() {
   };
 
   // Get status badge class
-  const getStatusClass = (status: QuizStatus) => {
+  const getStatusClass = (status: string) => {
     switch (status) {
       case QuizStatus.ACTIVE:
         return "bg-green-100 text-green-800";
@@ -748,7 +748,7 @@ export default function HostDashboard() {
                                 />
                               </svg>
                               <p>
-                                Ends in <span className="text-primary font-semibold">{getTimeRemaining(quiz.endTime)}</span>
+                                Ends in <span className="text-primary font-semibold">{getTimeRemaining(quiz.endTime.toString())}</span>
                               </p>
                             </>
                           ) : quiz.status === QuizStatus.COMPLETED ? (
@@ -768,7 +768,7 @@ export default function HostDashboard() {
                                 />
                               </svg>
                               <p>
-                                Ended on <span className="font-medium">{formatDate(quiz.endTime)}</span>
+                                Ended on <span className="font-medium">{formatDate(quiz.endTime.toString())}</span>
                               </p>
                             </>
                           ) : (
@@ -788,7 +788,7 @@ export default function HostDashboard() {
                                 />
                               </svg>
                               <p>
-                                Starts on <span className="font-medium">{formatDate(quiz.startTime)}</span>
+                                Starts on <span className="font-medium">{formatDate(quiz.startTime.toString())}</span>
                               </p>
                             </>
                           )}
@@ -824,6 +824,79 @@ export default function HostDashboard() {
                 ✕
               </Button>
               <QRCodeShare quizId={currentQuizId} />
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Reconduct Quiz Modal */}
+      {showReconductModal && reconductQuiz && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <Card className="w-full max-w-md mx-4">
+            <CardContent className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-medium">Reconduct Quiz</h3>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-gray-400 hover:text-gray-500"
+                  onClick={() => setShowReconductModal(false)}
+                >
+                  ✕
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="reconduct-quiz-name" className="text-sm font-medium text-gray-700">
+                    Quiz
+                  </Label>
+                  <div id="reconduct-quiz-name" className="mt-1 text-sm text-gray-900 font-medium">
+                    {reconductQuiz.subject}: {reconductQuiz.section}
+                  </div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    {reconductQuiz.gameMode === "single" ? "Single Entry Mode" : "Multi-Choice Mode"} · 
+                    {reconductQuiz.questions.length} question{reconductQuiz.questions.length !== 1 ? 's' : ''}
+                  </div>
+                </div>
+                
+                <div>
+                  <Label htmlFor="reconduct-start-time" className="text-sm font-medium text-gray-700">
+                    New Start Time
+                  </Label>
+                  <Input
+                    id="reconduct-start-time"
+                    type="datetime-local"
+                    value={reconductStartTime}
+                    onChange={(e) => setReconductStartTime(e.target.value)}
+                    className="mt-1 block w-full"
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="reconduct-end-time" className="text-sm font-medium text-gray-700">
+                    New End Time
+                  </Label>
+                  <Input
+                    id="reconduct-end-time"
+                    type="datetime-local"
+                    value={reconductEndTime}
+                    onChange={(e) => setReconductEndTime(e.target.value)}
+                    className="mt-1 block w-full"
+                  />
+                </div>
+                
+                <div className="pt-2">
+                  <Button
+                    type="button"
+                    className="w-full"
+                    onClick={submitReconductQuiz}
+                    disabled={createQuizMutation.isPending}
+                  >
+                    {createQuizMutation.isPending ? "Creating..." : "Reconduct Quiz"}
+                  </Button>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
