@@ -359,13 +359,13 @@ export default function HostDashboard() {
 
   return (
     <div className="py-6">
-      <h1 className="text-2xl font-bold text-gray-900">Host Dashboard</h1>
-      <p className="mt-1 text-sm text-gray-500">Create and manage your quiz sessions</p>
+      <h1 className="text-2xl font-bold text-foreground">Host Dashboard</h1>
+      <p className="mt-1 text-sm text-muted-foreground">Create and manage your quiz sessions</p>
 
       {/* Quiz Creation Section */}
       <div className="mt-6 shadow sm:rounded-md">
-        <div className="bg-white px-4 py-5 sm:p-6">
-          <h2 className="text-lg font-medium text-gray-900">Create a New Quiz</h2>
+        <div className="bg-card px-4 py-5 sm:p-6">
+          <h2 className="text-lg font-medium text-foreground">Create a New Quiz</h2>
           
           <form className="mt-5 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6" onSubmit={handleSubmit}>
             <div className="sm:col-span-3">
@@ -449,7 +449,7 @@ export default function HostDashboard() {
               <Label>
                 Questions & Answers ({gameMode === "single" ? "Single Entry Mode" : "Multi-Choice Mode"})
               </Label>
-              <div className="mt-1 border rounded-md p-4 bg-gray-50">
+              <div className="mt-1 border rounded-md p-4 bg-secondary/20">
                 {questions.map((question, index) => (
                   <div key={question.id} className="mb-4 pb-4 border-b border-gray-200">
                     <div className="flex items-center justify-between">
