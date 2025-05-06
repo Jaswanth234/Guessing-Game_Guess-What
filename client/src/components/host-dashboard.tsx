@@ -614,7 +614,7 @@ export default function HostDashboard() {
             <ul role="list" className="divide-y divide-gray-200">
               {quizzes.map((quiz) => (
                 <li key={quiz.id}>
-                  <a href={`/quiz/${quiz.id}`} className="block hover:bg-gray-50">
+                  <a href={`/quiz/${quiz.id}`} className="block hover:bg-accent/30">
                     <div className="px-4 py-4 sm:px-6">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
@@ -645,7 +645,7 @@ export default function HostDashboard() {
                           <p className={`ml-3 text-sm font-medium truncate
                             ${quiz.status === QuizStatus.ACTIVE ? 'text-primary-600' :
                             quiz.status === QuizStatus.SCHEDULED ? 'text-blue-600' :
-                            'text-gray-900'}`}>
+                            'text-foreground'}`}>
                             {quiz.subject}: {quiz.section}
                           </p>
                         </div>
@@ -702,7 +702,7 @@ export default function HostDashboard() {
                               viewBox="0 0 24 24"
                               strokeWidth="1.5"
                               stroke="currentColor"
-                              className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                              className="flex-shrink-0 mr-1.5 h-5 w-5 text-muted-foreground"
                             >
                               <path
                                 strokeLinecap="round"
@@ -719,7 +719,7 @@ export default function HostDashboard() {
                               viewBox="0 0 24 24"
                               strokeWidth="1.5"
                               stroke="currentColor"
-                              className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                              className="flex-shrink-0 mr-1.5 h-5 w-5 text-muted-foreground"
                             >
                               <path
                                 strokeLinecap="round"
@@ -739,7 +739,7 @@ export default function HostDashboard() {
                                 viewBox="0 0 24 24"
                                 strokeWidth="1.5"
                                 stroke="currentColor"
-                                className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                                className="flex-shrink-0 mr-1.5 h-5 w-5 text-muted-foreground"
                               >
                                 <path
                                   strokeLinecap="round"
@@ -759,7 +759,7 @@ export default function HostDashboard() {
                                 viewBox="0 0 24 24"
                                 strokeWidth="1.5"
                                 stroke="currentColor"
-                                className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                                className="flex-shrink-0 mr-1.5 h-5 w-5 text-muted-foreground"
                               >
                                 <path
                                   strokeLinecap="round"
@@ -779,7 +779,7 @@ export default function HostDashboard() {
                                 viewBox="0 0 24 24"
                                 strokeWidth="1.5"
                                 stroke="currentColor"
-                                className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                                className="flex-shrink-0 mr-1.5 h-5 w-5 text-muted-foreground"
                               >
                                 <path
                                   strokeLinecap="round"
@@ -839,7 +839,7 @@ export default function HostDashboard() {
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-gray-400 hover:text-gray-500"
+                  className="text-muted-foreground hover:text-muted-foreground"
                   onClick={() => setShowReconductModal(false)}
                 >
                   ✕
@@ -848,20 +848,20 @@ export default function HostDashboard() {
               
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="reconduct-quiz-name" className="text-sm font-medium text-gray-700">
+                  <Label htmlFor="reconduct-quiz-name" className="text-sm font-medium text-foreground">
                     Quiz
                   </Label>
                   <div id="reconduct-quiz-name" className="mt-1 text-sm text-gray-900 font-medium">
                     {reconductQuiz.subject}: {reconductQuiz.section}
                   </div>
-                  <div className="text-xs text-gray-500 mt-1">
+                  <div className="text-xs text-muted-foreground mt-1">
                     {reconductQuiz.gameMode === "single" ? "Single Entry Mode" : "Multi-Choice Mode"} · 
                     {reconductQuiz.questions.length} question{reconductQuiz.questions.length !== 1 ? 's' : ''}
                   </div>
                 </div>
                 
                 <div>
-                  <Label htmlFor="reconduct-start-time" className="text-sm font-medium text-gray-700">
+                  <Label htmlFor="reconduct-start-time" className="text-sm font-medium text-foreground">
                     New Start Time
                   </Label>
                   <Input
@@ -874,7 +874,7 @@ export default function HostDashboard() {
                 </div>
                 
                 <div>
-                  <Label htmlFor="reconduct-end-time" className="text-sm font-medium text-gray-700">
+                  <Label htmlFor="reconduct-end-time" className="text-sm font-medium text-foreground">
                     New End Time
                   </Label>
                   <Input
