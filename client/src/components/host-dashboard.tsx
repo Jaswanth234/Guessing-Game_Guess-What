@@ -282,13 +282,13 @@ export default function HostDashboard() {
   const getStatusClass = (status: string) => {
     switch (status) {
       case QuizStatus.ACTIVE:
-        return "bg-green-100 text-green-800";
+        return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
       case QuizStatus.COMPLETED:
-        return "bg-gray-100 text-gray-800";
+        return "bg-secondary/20 text-foreground/70";
       case QuizStatus.SCHEDULED:
-        return "bg-blue-100 text-blue-800";
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-secondary/20 text-foreground/70";
     }
   };
 
@@ -851,7 +851,7 @@ export default function HostDashboard() {
                   <Label htmlFor="reconduct-quiz-name" className="text-sm font-medium text-foreground">
                     Quiz
                   </Label>
-                  <div id="reconduct-quiz-name" className="mt-1 text-sm text-gray-900 font-medium">
+                  <div id="reconduct-quiz-name" className="mt-1 text-sm text-foreground font-medium">
                     {reconductQuiz.subject}: {reconductQuiz.section}
                   </div>
                   <div className="text-xs text-muted-foreground mt-1">
