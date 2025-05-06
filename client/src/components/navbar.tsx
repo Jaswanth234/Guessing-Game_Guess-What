@@ -1,6 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -20,7 +21,7 @@ export default function Navbar() {
   const isActive = (path: string) => location === path;
 
   return (
-    <nav className="bg-white shadow-sm">
+    <nav className="bg-background border-b border-border shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
@@ -34,15 +35,17 @@ export default function Navbar() {
                 href="/"
                 className={`${
                   isActive("/")
-                    ? "border-primary text-gray-900"
-                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                    ? "border-primary text-foreground"
+                    : "border-transparent text-muted-foreground hover:border-border hover:text-foreground"
                 } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
               >
                 Dashboard
               </Link>
             </div>
           </div>
-          <div className="hidden sm:ml-6 sm:flex sm:items-center">
+          <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-2">
+            <ThemeToggle />
+            
             {user && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -51,10 +54,10 @@ export default function Navbar() {
                     className="relative h-8 w-8 rounded-full"
                   >
                     <div className="flex items-center gap-2">
-                      <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-white font-semibold">
+                      <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-semibold">
                         {user.username.substring(0, 1).toUpperCase()}
                       </div>
-                      <span className="text-sm font-medium text-gray-700">
+                      <span className="text-sm font-medium text-foreground">
                         {user.username}
                       </span>
                     </div>
@@ -71,7 +74,9 @@ export default function Navbar() {
               </DropdownMenu>
             )}
           </div>
-          <div className="-mr-2 flex items-center sm:hidden">
+          <div className="-mr-2 flex items-center sm:hidden space-x-2">
+            <ThemeToggle />
+            
             <Button variant="ghost" size="sm">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
