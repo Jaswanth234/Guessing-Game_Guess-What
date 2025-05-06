@@ -476,7 +476,7 @@ export default function HostDashboard() {
                     
                     {gameMode === "single" ? (
                       <div className="mt-2">
-                        <Label className="text-xs font-medium text-gray-500">
+                        <Label className="text-xs font-medium text-muted-foreground">
                           Acceptable Answers (comma separated)
                         </Label>
                         <Input
@@ -489,7 +489,7 @@ export default function HostDashboard() {
                     ) : (
                       <div className="mt-2 space-y-4">
                         <div>
-                          <Label className="text-xs font-medium text-gray-500">
+                          <Label className="text-xs font-medium text-muted-foreground">
                             Answer Selection Type
                           </Label>
                           <Select 
@@ -605,12 +605,12 @@ export default function HostDashboard() {
 
       {/* Quiz Sessions Section */}
       <div className="mt-10">
-        <h2 className="text-lg font-medium text-gray-900 mb-5">Your Quiz Sessions</h2>
+        <h2 className="text-lg font-medium text-foreground mb-5">Your Quiz Sessions</h2>
         
         {isLoading ? (
           <div className="text-center py-6">Loading your quizzes...</div>
         ) : quizzes && quizzes.length > 0 ? (
-          <div className="bg-white shadow overflow-hidden sm:rounded-md">
+          <div className="bg-card shadow overflow-hidden sm:rounded-md">
             <ul role="list" className="divide-y divide-gray-200">
               {quizzes.map((quiz) => (
                 <li key={quiz.id}>
@@ -695,7 +695,7 @@ export default function HostDashboard() {
                       </div>
                       <div className="mt-2 sm:flex sm:justify-between">
                         <div className="sm:flex">
-                          <p className="flex items-center text-sm text-gray-500">
+                          <p className="flex items-center text-sm text-muted-foreground">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
@@ -712,7 +712,7 @@ export default function HostDashboard() {
                             </svg>
                             {Array.isArray(quiz.participants) ? quiz.participants.length : 0} participants
                           </p>
-                          <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
+                          <p className="mt-2 flex items-center text-sm text-muted-foreground sm:mt-0 sm:ml-6">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
@@ -730,7 +730,7 @@ export default function HostDashboard() {
                             {quiz.gameMode === "single" ? "Single Entry Mode" : "Multi-Choice Mode"}
                           </p>
                         </div>
-                        <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                        <div className="mt-2 flex items-center text-sm text-muted-foreground sm:mt-0">
                           {quiz.status === QuizStatus.ACTIVE ? (
                             <>
                               <svg
@@ -803,8 +803,8 @@ export default function HostDashboard() {
         ) : (
           <Card>
             <CardContent className="py-6 text-center">
-              <p className="text-gray-500">You haven't created any quizzes yet.</p>
-              <p className="text-sm text-gray-400 mt-1">Create your first quiz above!</p>
+              <p className="text-muted-foreground">You haven't created any quizzes yet.</p>
+              <p className="text-sm text-muted-foreground/70 mt-1">Create your first quiz above!</p>
             </CardContent>
           </Card>
         )}
