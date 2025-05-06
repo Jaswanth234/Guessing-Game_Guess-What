@@ -8,6 +8,7 @@ import HomePage from "@/pages/home-page";
 import QuizPage from "@/pages/quiz-page";
 import AuthPage from "@/pages/auth-page";
 import { AuthProvider } from "./hooks/use-auth";
+import { ThemeProvider } from "./hooks/use-theme";
 import { ProtectedRoute } from "./lib/protected-route";
 
 // Placeholder component
@@ -30,12 +31,14 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </AuthProvider>
+      <ThemeProvider defaultTheme="system" storageKey="quiz-theme">
+        <AuthProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Router />
+          </TooltipProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
