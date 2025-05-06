@@ -451,7 +451,7 @@ export default function HostDashboard() {
               </Label>
               <div className="mt-1 border rounded-md p-4 bg-secondary/20">
                 {questions.map((question, index) => (
-                  <div key={question.id} className="mb-4 pb-4 border-b border-gray-200">
+                  <div key={question.id} className="mb-4 pb-4 border-b border-border">
                     <div className="flex items-center justify-between">
                       <h3 className="text-sm font-medium">Question {index + 1}</h3>
                       {questions.length > 1 && (
@@ -459,7 +459,7 @@ export default function HostDashboard() {
                           type="button" 
                           variant="ghost" 
                           size="sm"
-                          className="text-red-600 hover:text-red-900"
+                          className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
                           onClick={() => removeQuestion(question.id)}
                         >
                           Remove
@@ -520,14 +520,14 @@ export default function HostDashboard() {
                                   type="radio"
                                   name={`q${question.id}-correct`}
                                   value={answerIndex}
-                                  className="h-4 w-4 text-primary border-gray-300 focus:ring-primary"
+                                  className="h-4 w-4 text-primary border-muted focus:ring-primary"
                                   checked={question.correctAnswers.includes(answerIndex)}
                                   onChange={() => updateCorrectAnswer(question.id, answerIndex)}
                                 />
                                 
                                 <Input
                                   placeholder={`Option ${answerIndex + 1}`}
-                                  className={`flex-1 ${isDecoy ? 'border-orange-300 bg-orange-50' : ''}`}
+                                  className={`flex-1 ${isDecoy ? 'border-orange-300 bg-orange-50 dark:border-orange-600 dark:bg-orange-950/30' : ''}`}
                                   value={answer}
                                   onChange={(e) => updateQuestionAnswer(question.id, answerIndex, e.target.value)}
                                 />
@@ -611,7 +611,7 @@ export default function HostDashboard() {
           <div className="text-center py-6">Loading your quizzes...</div>
         ) : quizzes && quizzes.length > 0 ? (
           <div className="bg-card shadow overflow-hidden sm:rounded-md">
-            <ul role="list" className="divide-y divide-gray-200">
+            <ul role="list" className="divide-y divide-border">
               {quizzes.map((quiz) => (
                 <li key={quiz.id}>
                   <a href={`/quiz/${quiz.id}`} className="block hover:bg-accent/30">
@@ -619,9 +619,9 @@ export default function HostDashboard() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
                           <div className={`flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center
-                            ${quiz.status === QuizStatus.ACTIVE ? 'bg-primary-100 text-primary-600' :
-                            quiz.status === QuizStatus.SCHEDULED ? 'bg-blue-100 text-blue-600' :
-                            'bg-gray-100 text-gray-600'}`}>
+                            ${quiz.status === QuizStatus.ACTIVE ? 'bg-primary-100 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400' :
+                            quiz.status === QuizStatus.SCHEDULED ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' :
+                            'bg-secondary/20 text-foreground/70'}`}>
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
@@ -643,8 +643,8 @@ export default function HostDashboard() {
                             </svg>
                           </div>
                           <p className={`ml-3 text-sm font-medium truncate
-                            ${quiz.status === QuizStatus.ACTIVE ? 'text-primary-600' :
-                            quiz.status === QuizStatus.SCHEDULED ? 'text-blue-600' :
+                            ${quiz.status === QuizStatus.ACTIVE ? 'text-primary-600 dark:text-primary-400' :
+                            quiz.status === QuizStatus.SCHEDULED ? 'text-blue-600 dark:text-blue-400' :
                             'text-foreground'}`}>
                             {quiz.subject}: {quiz.section}
                           </p>
@@ -656,7 +656,7 @@ export default function HostDashboard() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="text-green-600 hover:text-green-900"
+                            className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300"
                             onClick={(e) => {
                               e.preventDefault();
                               handleReconductQuiz(quiz);
@@ -667,7 +667,7 @@ export default function HostDashboard() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="text-red-600 hover:text-red-900"
+                            className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
                             onClick={(e) => {
                               e.preventDefault();
                               if (window.confirm('Are you sure you want to delete this quiz?')) {
