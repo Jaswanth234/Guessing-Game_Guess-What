@@ -23,7 +23,7 @@ Create a `.env` file in the project root with the following content:
 ```
 HOST=localhost
 PORT=5000
-DATABASE_URL=postgresql://postgres:YourPassword@localhost:5432/quizgame
+DATABASE_URL=postgresql://postgres:YourPassword@localhost:5432/quiz-game
 SESSION_SECRET=some_random_string
 ```
 
@@ -86,7 +86,7 @@ If you get an error like `listen ENOTSUP: operation not supported on socket ::1:
 
 1. **Verify PostgreSQL is running:** Make sure your PostgreSQL service is running.
 2. **Check credentials:** Ensure the username and password in your .env file are correct.
-3. **Create the database:** Make sure you've created a database named 'quizgame'.
+3. **Create the database:** Make sure you've created a database named 'quiz-game'.
 
 ### Module Not Found Errors
 

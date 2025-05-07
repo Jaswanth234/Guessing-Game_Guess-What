@@ -35,9 +35,9 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
       const sortedParticipants = [...quiz.participants]
         .map(participant => {
           let correctCount = 0;
-          
+
           console.log(`Processing participant: ${participant.playerName}`, participant);
-          
+
           // Process each answer
           participant.answers.forEach((answer, idx) => {
             const question = quiz.questions[idx];
@@ -47,10 +47,10 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
             const selectedAnswers = typeof answer === 'string' && answer.includes(',') 
               ? answer.split(',').map((a: string) => Number(a))
               : [Number(answer)];
-              
+
             // Let's count correct answers based on non-decoy options
             let correctAnswersCount = 0;
-            
+
             // Check if the question has the isDecoy property
             if (question && question.isDecoy && Array.isArray(question.isDecoy)) {
               // Count each selected answer that is not a decoy as correct
@@ -69,7 +69,7 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
             else if (selectedAnswers.includes(0)) {
               correctAnswersCount = 1;
             }
-            
+
             // Add to total correct count
             correctCount += correctAnswersCount;
           });
@@ -102,7 +102,7 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
     return (
       <div className="py-6 text-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-        <p className="mt-4 text-gray-500">Loading results...</p>
+        <p className="mt-4 text-muted-foreground">Loading results...</p>
       </div>
     );
   }
@@ -112,8 +112,8 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
       <div className="py-6">
         <Card>
           <CardContent className="py-10 text-center">
-            <h2 className="text-xl font-semibold text-gray-900">Results Not Available</h2>
-            <p className="mt-2 text-gray-500">This quiz is still in progress or results have not been processed.</p>
+            <h2 className="text-xl font-semibold text-foreground">Results Not Available</h2>
+            <p className="mt-2 text-muted-foreground">This quiz is still in progress or results have not been processed.</p>
           </CardContent>
         </Card>
       </div>
@@ -123,14 +123,14 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
   return (
     <div className="py-6">
       <Card>
-        <CardContent className="px-4 py-5 sm:px-6 bg-gradient-to-r from-secondary-500 to-accent-500 text-white">
-          <h3 className="text-lg leading-6 font-medium text-center">🎉 Quiz Results 🎉</h3>
-          <p className="mt-1 max-w-2xl text-sm text-center">{quiz.subject}: {quiz.section}</p>
+        <CardContent className="px-4 py-5 sm:px-6 bg-primary/10 text-primary-foreground">
+          <h3 className="text-lg leading-6 font-medium text-center text-foreground">🎉 Quiz Results 🎉</h3>
+          <p className="mt-1 max-w-2xl text-sm text-center text-muted-foreground">{quiz.subject}: {quiz.section}</p>
         </CardContent>
 
-        <div className="bg-gray-50 px-4 py-6 sm:px-6 text-center">
-          <h2 className="text-2xl font-bold text-gray-900">Quiz Complete!</h2>
-          <p className="mt-1 text-sm text-gray-500">
+        <div className="bg-secondary/50 px-4 py-6 sm:px-6 text-center">
+          <h2 className="text-2xl font-bold text-foreground">Quiz Complete!</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
             Thank you for participating. Here are the winners:
           </p>
         </div>
@@ -159,8 +159,8 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
                       <div className="relative">
                         <div 
                           className={`${winner.place === 1 
-                            ? 'h-24 w-24 rounded-full bg-yellow-100 border-2 border-yellow-400 text-yellow-700' 
-                            : 'h-20 w-20 rounded-full bg-gray-100 border-2 border-gray-300 text-gray-700'} 
+                            ? 'h-24 w-24 rounded-full bg-amber-100 dark:bg-amber-900/50 border-2 border-amber-400 dark:border-amber-500 text-amber-700 dark:text-amber-200' 
+                            : 'h-20 w-20 rounded-full bg-secondary border-2 border-border text-secondary-foreground'} 
                             flex items-center justify-center`}
                         >
                           <span className={`${winner.place === 1 ? 'text-2xl' : 'text-xl'} font-bold`}>
@@ -170,19 +170,19 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
                         <div 
                           className={`absolute -bottom-2 -right-2 h-8 w-8 rounded-full flex items-center justify-center
                             ${winner.place === 1 
-                              ? 'bg-yellow-400 border-2 border-yellow-500' 
-                              : 'bg-gray-100 border-2 border-gray-300'}`}
+                              ? 'bg-amber-400 dark:bg-amber-500 border-2 border-amber-500 dark:border-amber-400' 
+                              : 'bg-muted border-2 border-border'}`}
                         >
                           <span className="text-sm font-bold">{winner.place}</span>
                         </div>
                       </div>
-                      <h3 className="mt-3 text-sm font-medium text-gray-900">{winner.playerName}</h3>
-                      <p className="text-xs text-gray-500">{winner.correctCount} correct answers</p>
+                      <h3 className="mt-3 text-sm font-medium text-foreground">{winner.playerName}</h3>
+                      <p className="text-xs text-muted-foreground">{winner.correctCount} correct answers</p>
                       <div 
                         className={`mt-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                           ${winner.place === 1 
-                            ? 'bg-yellow-100 text-yellow-800' 
-                            : 'bg-gray-100 text-gray-800'}`}
+                            ? 'bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-200' 
+                            : 'bg-secondary/70 text-secondary-foreground'}`}
                       >
                         {winner.place === 1 ? '1st Place 🏆' : `${winner.place}${
                           winner.place === 2 ? 'nd' : 'rd'} Place`}
@@ -193,28 +193,28 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
 
               {/* Additional Winners (4th and 5th place) */}
               {winners.some(w => w.place > 3) && (
-                <div className="mt-10 border-t border-gray-200 pt-6">
-                  <h3 className="text-sm font-medium text-gray-500 text-center mb-4">Additional Prize Winners</h3>
+                <div className="mt-10 border-t border-border pt-6">
+                  <h3 className="text-sm font-medium text-muted-foreground text-center mb-4">Additional Prize Winners</h3>
 
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     {winners
                       .filter(winner => winner.place > 3)
                       .map(winner => (
-                        <div key={winner.id} className="relative rounded-lg border border-gray-200 bg-white px-4 py-3 shadow-sm flex items-center space-x-3 hover:border-gray-300">
+                        <div key={winner.id} className="relative rounded-lg border border-border bg-card px-4 py-3 shadow-sm flex items-center space-x-3 hover:border-primary/30">
                           <div className="flex-shrink-0">
-                            <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 text-sm font-medium">
+                            <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center text-secondary-foreground text-sm font-medium">
                               {winner.playerName.split(' ').map(n => n[0]).join('').toUpperCase()}
                             </div>
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900">
+                            <p className="text-sm font-medium text-foreground">
                               {winner.playerName}
                             </p>
-                            <p className="text-xs text-gray-500 truncate">
+                            <p className="text-xs text-muted-foreground truncate">
                               {winner.correctCount} correct answers
                             </p>
                           </div>
-                          <div className="inline-flex items-center text-xs font-medium px-2 py-1 rounded-full bg-gray-100 text-gray-800">
+                          <div className="inline-flex items-center text-xs font-medium px-2 py-1 rounded-full bg-secondary text-secondary-foreground">
                             {winner.place}th Place
                           </div>
                         </div>
@@ -224,31 +224,31 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
               )}
 
               {/* All Participants Table */}
-              <div className="mt-10 border-t border-gray-200 pt-6">
-                <h3 className="text-sm font-medium text-gray-500 text-center mb-4">All Participants</h3>
+              <div className="mt-10 border-t border-border pt-6">
+                <h3 className="text-sm font-medium text-muted-foreground text-center mb-4">All Participants</h3>
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                  <table className="min-w-full divide-y divide-border">
+                    <thead className="bg-muted/50">
                       <tr>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                           Rank
                         </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                           Name
                         </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                           Score
                         </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                           Submission Time
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-card divide-y divide-border">
                       {winners.map((participant) => (
                         <tr key={participant.id}>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-gray-900">
+                            <div className="text-sm font-medium text-foreground">
                               {participant.place}
                               {participant.place === 1 && "🥇"}
                               {participant.place === 2 && "🥈"}
@@ -256,35 +256,35 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-gray-900">{participant.playerName}</div>
+                            <div className="text-sm font-medium text-foreground">{participant.playerName}</div>
                           </td>
                           <td className="px-6 py-4">
                             <div>
-                              <div className="text-sm text-gray-900">{participant.correctCount} correct</div>
-                              <div className="text-xs text-gray-500 mt-1">
+                              <div className="text-sm text-foreground">{participant.correctCount} correct</div>
+                              <div className="text-xs text-muted-foreground mt-1">
                                 Selected options: {participant.answers.map((answer, idx) => {
                                   // Handle potentially empty answers
                                   if (!answer || answer === "") {
-                                    return <span key={idx} className="ml-1 text-gray-400">No answer</span>;
+                                    return <span key={idx} className="ml-1 text-muted-foreground/60">No answer</span>;
                                   }
-                                  
+
                                   const selectedOptions = typeof answer === 'string' 
                                     ? answer.split(',').map(Number)
                                     : [Number(answer)];
                                   const question = quiz.questions[idx];
-                                  
+
                                   // If no question found, skip
                                   if (!question) {
-                                    return <span key={idx} className="ml-1 text-gray-400">Question not found</span>;
+                                    return <span key={idx} className="ml-1 text-muted-foreground/60">Question not found</span>;
                                   }
-                                  
+
                                   return (
                                     <span key={idx} className="block my-1 ml-1">
                                       <span className="font-medium">Q{idx+1}:</span>{' '}
                                       {selectedOptions.map((optionIdx: number, i: number) => {
                                         // Determine if the selected option is correct (not a decoy)
                                         let isCorrect = false;
-                                        
+
                                         // If the question has isDecoy array, check if this option is not a decoy
                                         if (question.isDecoy && Array.isArray(question.isDecoy) && 
                                             optionIdx >= 0 && optionIdx < question.isDecoy.length) {
@@ -295,30 +295,35 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
                                         else if (optionIdx === 0) {
                                           isCorrect = true;
                                         }
-                                        
+
                                         const optionText = Array.isArray(question.answers) && 
                                           question.answers[optionIdx] || 'Unknown option';
-                                        
+
                                         return (
-                                          <span key={i} className={`${isCorrect ? 'text-green-600' : 'text-red-600'} ${i > 0 ? 'ml-1' : ''}`}>
+                                          <span key={i} className={`${isCorrect ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'} ${i > 0 ? 'ml-1' : ''}`}>
                                             {optionText}{i < selectedOptions.length - 1 ? ', ' : ''}
                                           </span>
                                         );
                                       })}
                                       {selectedOptions.length === 0 && 
-                                        <span className="text-gray-400">No option selected</span>
+                                        <span className="text-muted-foreground/60">No option selected</span>
                                       }
                                     </span>
                                   );
                                 })}
                               </div>
-                              <div className="text-xs text-gray-500">
+                              <div className="text-xs text-muted-foreground">
                                 out of {quiz.questions.length} questions
                               </div>
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {new Date(participant.submittedAt || Date.now()).toLocaleTimeString()}
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
+                            {new Date(participant.submittedAt || Date.now()).toLocaleTimeString(undefined, {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                              hour12: true,
+                              timeZoneName: 'short'
+                            })}
                           </td>
                         </tr>
                       ))}
@@ -327,11 +332,11 @@ export default function WinnerAnnouncement({ quizId }: WinnerAnnouncementProps) 
                 </div>
               </div>
 
-              
+
             </>
           ) : (
             <div className="text-center py-8">
-              <p className="text-gray-500">No participants completed this quiz.</p>
+              <p className="text-muted-foreground">No participants completed this quiz.</p>
             </div>
           )}
         </div>

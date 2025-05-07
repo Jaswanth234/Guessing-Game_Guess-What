@@ -261,7 +261,7 @@ export default function PlayerArea() {
       <div className="py-6 max-w-3xl mx-auto">
         <div className="text-center py-10">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-gray-500">Loading quiz...</p>
+          <p className="mt-4 text-muted-foreground">Loading quiz...</p>
         </div>
       </div>
     );
@@ -272,8 +272,8 @@ export default function PlayerArea() {
       <div className="py-6 max-w-3xl mx-auto">
         <Card>
           <CardContent className="py-10 text-center">
-            <h2 className="text-xl font-semibold text-gray-900">Quiz Not Found</h2>
-            <p className="mt-2 text-gray-500">The quiz you're looking for doesn't exist or has been removed.</p>
+            <h2 className="text-xl font-semibold text-foreground">Quiz Not Found</h2>
+            <p className="mt-2 text-muted-foreground">The quiz you're looking for doesn't exist or has been removed.</p>
           </CardContent>
         </Card>
       </div>
@@ -285,10 +285,10 @@ export default function PlayerArea() {
       <div className="py-6 max-w-3xl mx-auto">
         <Card>
           <CardContent className="py-10 text-center">
-            <h2 className="text-xl font-semibold text-gray-900">Quiz Completed</h2>
-            <p className="mt-2 text-gray-500">This quiz has ended. Thank you for participating!</p>
+            <h2 className="text-xl font-semibold text-foreground">Quiz Completed</h2>
+            <p className="mt-2 text-muted-foreground">This quiz has ended. Thank you for participating!</p>
             {isSubmitted && (
-              <p className="mt-4 text-primary-600">Your answers have been submitted successfully.</p>
+              <p className="mt-4 text-primary">Your answers have been submitted successfully.</p>
             )}
           </CardContent>
         </Card>
@@ -301,14 +301,14 @@ export default function PlayerArea() {
       <div className="py-6 max-w-3xl mx-auto">
         <Card>
           <CardContent className="py-10">
-            <h2 className="text-xl font-semibold text-gray-900 text-center">Join Quiz</h2>
-            <p className="mt-2 text-gray-500 text-center mb-6">
+            <h2 className="text-xl font-semibold text-foreground text-center">Join Quiz</h2>
+            <p className="mt-2 text-muted-foreground text-center mb-6">
               {quiz.subject}: {quiz.section}
             </p>
             
             <form onSubmit={handleNameSubmit} className="max-w-md mx-auto">
               <div className="mb-4">
-                <label htmlFor="playerName" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="playerName" className="block text-sm font-medium text-foreground mb-1">
                   Enter your name
                 </label>
                 <Input
@@ -331,42 +331,42 @@ export default function PlayerArea() {
   return (
     <div className="py-6 max-w-3xl mx-auto">
       {/* Game Header */}
-      <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
-        <div className="px-4 py-5 sm:px-6 bg-gradient-to-r from-primary to-primary-700 text-white">
+      <div className="bg-card shadow overflow-hidden sm:rounded-lg mb-6">
+        <div className="px-4 py-5 sm:px-6 bg-primary text-primary-foreground">
           <h3 className="text-lg leading-6 font-medium">{quiz.subject}: {quiz.section}</h3>
           <p className="mt-1 max-w-2xl text-sm">Hosted by {quiz.hostName}</p>
         </div>
-        <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
+        <div className="border-t border-border px-4 py-5 sm:px-6">
           <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
             <div className="sm:col-span-1">
-              <dt className="text-sm font-medium text-gray-500">
+              <dt className="text-sm font-medium text-muted-foreground">
                 Subject
               </dt>
-              <dd className="mt-1 text-sm text-gray-900">
+              <dd className="mt-1 text-sm text-foreground">
                 {quiz.subject}
               </dd>
             </div>
             <div className="sm:col-span-1">
-              <dt className="text-sm font-medium text-gray-500">
+              <dt className="text-sm font-medium text-muted-foreground">
                 Section
               </dt>
-              <dd className="mt-1 text-sm text-gray-900">
+              <dd className="mt-1 text-sm text-foreground">
                 {quiz.section}
               </dd>
             </div>
             <div className="sm:col-span-1">
-              <dt className="text-sm font-medium text-gray-500">
+              <dt className="text-sm font-medium text-muted-foreground">
                 Game Mode
               </dt>
-              <dd className="mt-1 text-sm text-gray-900">
+              <dd className="mt-1 text-sm text-foreground">
                 {quiz.gameMode === "single" ? "Single Entry Mode" : "Multi-Choice Mode"}
               </dd>
             </div>
             <div className="sm:col-span-1">
-              <dt className="text-sm font-medium text-gray-500">
+              <dt className="text-sm font-medium text-muted-foreground">
                 Time Remaining
               </dt>
-              <dd className="mt-1 text-sm text-gray-900">
+              <dd className="mt-1 text-sm text-foreground">
                 <div className="text-primary font-bold text-xl">
                   {timeLeft}
                 </div>
@@ -377,17 +377,17 @@ export default function PlayerArea() {
       </div>
 
       {/* Game Questions */}
-      <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-        <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">Quiz Questions</h3>
-          <p className="mt-1 max-w-2xl text-sm text-gray-500">Answer all questions before submitting</p>
+      <div className="bg-card shadow overflow-hidden sm:rounded-lg">
+        <div className="px-4 py-5 sm:px-6 border-b border-border">
+          <h3 className="text-lg leading-6 font-medium text-foreground">Quiz Questions</h3>
+          <p className="mt-1 max-w-2xl text-sm text-muted-foreground">Answer all questions before submitting</p>
         </div>
         <div className="px-4 py-5 sm:p-6">
           <form onSubmit={handleSubmit}>
             <div className="space-y-6">
               {quiz.questions.map((question, index) => (
-                <div key={index} className="bg-gray-50 px-4 py-5 sm:px-6 rounded-lg">
-                  <div className="text-base font-medium text-gray-900">
+                <div key={index} className="bg-secondary/50 px-4 py-5 sm:px-6 rounded-lg">
+                  <div className="text-base font-medium text-foreground">
                     {index + 1}. {question.text}
                   </div>
                   <div className="mt-2">
@@ -416,7 +416,7 @@ export default function PlayerArea() {
                                   value={optionIndex}
                                   checked={isSelected}
                                   onChange={() => handleMultiChoiceSelect(index, optionIndex, question.selectionType)}
-                                  className="h-4 w-4 text-primary border-gray-300 focus:ring-primary rounded"
+                                  className="h-4 w-4 text-primary border-input focus:ring-primary rounded"
                                   disabled={isSubmitting || isSubmitted || !isActive}
                                 />
                               ) : question.selectionType === "dropdown" ? (
@@ -424,7 +424,7 @@ export default function PlayerArea() {
                                   id={`q${index}-select`}
                                   value={answers[index] || ""}
                                   onChange={(e) => handleMultiChoiceSelect(index, parseInt(e.target.value), question.selectionType)}
-                                  className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md"
+                                  className="block w-full pl-3 pr-10 py-2 text-base border-input focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md"
                                   disabled={isSubmitting || isSubmitted || !isActive}
                                 >
                                   <option value="" disabled>Select an answer</option>
@@ -442,7 +442,7 @@ export default function PlayerArea() {
                                   value={optionIndex}
                                   checked={answers[index] === optionIndex.toString()}
                                   onChange={() => handleMultiChoiceSelect(index, optionIndex, question.selectionType)}
-                                  className="h-4 w-4 text-primary border-gray-300 focus:ring-primary"
+                                  className="h-4 w-4 text-primary border-input focus:ring-primary"
                                   disabled={isSubmitting || isSubmitted || !isActive}
                                 />
                               )}
@@ -450,7 +450,7 @@ export default function PlayerArea() {
                               {question.selectionType !== "dropdown" && (
                                 <label
                                   htmlFor={`q${index}-a${optionIndex}`}
-                                  className="ml-3 block text-sm font-medium text-gray-700"
+                                  className="ml-3 block text-sm font-medium text-foreground"
                                 >
                                   {option}
                                 </label>
