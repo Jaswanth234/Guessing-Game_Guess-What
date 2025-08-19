@@ -1,4 +1,4 @@
-// Script to create PostgreSQL tables with foreign keys
+// Script to create PostgreSQL tables with foreign keys, indexes, and constraints
 import pg from 'pg';
 import dotenv from 'dotenv';
 
@@ -38,7 +38,7 @@ const createTables = async () => {
     await client.query(`
       CREATE TABLE IF NOT EXISTS quizzes (
         id SERIAL PRIMARY KEY,
-        host_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        host_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
         host_name TEXT,
         subject TEXT NOT NULL,
         section TEXT NOT NULL,
@@ -53,16 +53,27 @@ const createTables = async () => {
       );
     `);
 
+    console.log('Creating index on quizzes.host_id...');
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_quizzes_host_id ON quizzes (host_id);
+    `);
+
     // PARTICIPANTS TABLE
     console.log('Creating participants table...');
     await client.query(`
       CREATE TABLE IF NOT EXISTS participants (
         id SERIAL PRIMARY KEY,
-        quiz_id INTEGER NOT NULL REFERENCES quizzes(id) ON DELETE CASCADE,
+        quiz_id INTEGER NOT NULL REFERENCES quizzes(id) ON DELETE CASCADE ON UPDATE CASCADE,
         player_name TEXT NOT NULL,
         answers JSONB NOT NULL,
-        submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT unique_quiz_player UNIQUE (quiz_id, player_name)
       );
+    `);
+
+    console.log('Creating index on participants.quiz_id...');
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_participants_quiz_id ON participants (quiz_id);
     `);
 
     // SESSION TABLE
@@ -80,10 +91,10 @@ const createTables = async () => {
       CREATE INDEX IF NOT EXISTS idx_session_expire ON session (expire);
     `);
 
-    console.log('All tables created successfully with foreign keys!');
+    console.log('✅ All tables, foreign keys, indexes, and constraints created successfully!');
     client.release();
   } catch (error) {
-    console.error('Error creating tables:', error);
+    console.error('❌ Error creating tables:', error);
   } finally {
     await pool.end();
   }
