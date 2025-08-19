@@ -1,4 +1,4 @@
-// Script to create PostgreSQL tables for Windows users
+// Script to create PostgreSQL tables with foreign keys
 import pg from 'pg';
 import dotenv from 'dotenv';
 
@@ -8,7 +8,9 @@ dotenv.config();
 const { Pool } = pg;
 
 // Use the DATABASE_URL from environment or default
-const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5433/quiz-game';
+const connectionString =
+  process.env.DATABASE_URL ||
+  'postgresql://postgres:postgres@localhost:5433/quiz-game';
 
 const pool = new Pool({ connectionString });
 
@@ -16,7 +18,8 @@ const createTables = async () => {
   try {
     console.log('Connecting to PostgreSQL database...');
     const client = await pool.connect();
-    
+
+    // USERS TABLE
     console.log('Creating users table...');
     await client.query(`
       CREATE TABLE IF NOT EXISTS users (
@@ -29,12 +32,13 @@ const createTables = async () => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
-    
+
+    // QUIZZES TABLE
     console.log('Creating quizzes table...');
     await client.query(`
       CREATE TABLE IF NOT EXISTS quizzes (
         id SERIAL PRIMARY KEY,
-        host_id INTEGER NOT NULL,
+        host_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         host_name TEXT,
         subject TEXT NOT NULL,
         section TEXT NOT NULL,
@@ -48,18 +52,20 @@ const createTables = async () => {
         questions JSONB NOT NULL
       );
     `);
-    
+
+    // PARTICIPANTS TABLE
     console.log('Creating participants table...');
     await client.query(`
       CREATE TABLE IF NOT EXISTS participants (
         id SERIAL PRIMARY KEY,
-        quiz_id INTEGER NOT NULL,
+        quiz_id INTEGER NOT NULL REFERENCES quizzes(id) ON DELETE CASCADE,
         player_name TEXT NOT NULL,
         answers JSONB NOT NULL,
         submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
-    
+
+    // SESSION TABLE
     console.log('Creating session table...');
     await client.query(`
       CREATE TABLE IF NOT EXISTS session (
@@ -68,13 +74,13 @@ const createTables = async () => {
         expire TIMESTAMP NOT NULL
       );
     `);
-    
+
     console.log('Creating session index...');
     await client.query(`
       CREATE INDEX IF NOT EXISTS idx_session_expire ON session (expire);
     `);
-    
-    console.log('All tables created successfully!');
+
+    console.log('All tables created successfully with foreign keys!');
     client.release();
   } catch (error) {
     console.error('Error creating tables:', error);
